@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+
+body {
+  height: 100;
+  background: rgb(0, 76, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center ;
+}
+
+.wrapper {
+  background: rgb(0, 174, 255);
+  width: 80rem;
+  padding: 2rem;
+  margin-top: 4rem;
+  margin-left: 0;
+  border-radius: 1rem;
+}
+
+.screen {
+  height: 4rem;
+  width: 8rem;
+  margin-bottom: 4rem;
+  background: rgb(255, 0, 225);
+}
+
+.hour {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: .5rem;
+}
