@@ -1,10 +1,12 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import * as React from 'react';
+import Button from '@mui/material/Button';
 
-function App() {
+export default function App() {
+
+  // data comes from backend
   const [data, setData] = React.useState(null);
 
+  // 
   React.useEffect(() => {
     fetch("/api")
       .then((res) => res.json())
@@ -12,13 +14,8 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{!data ? "Loading..." : data}</p>
-      </header>
+    <div>
+      <Button variant="contained">{!data ? "Loading..." : data}</Button>
     </div>
   );
 }
-
-export default App;
