@@ -144,17 +144,31 @@ async function getReservationTime(salle, date, duree) {
         const timeSlotDuration = moment.duration(duree).asMinutes(); // Durée du créneau en minutes
 
         // Parcourir les créneaux disponibles et vérifier leur durée
+
         for (const slot of availableTimeSlots) {
-            const slotDuration = moment(slot.end).diff(slot.start, 'minutes');
-
-            if (slotDuration >= timeSlotDuration) {
-
+            const slotStart = moment(slot.start); // Moment de début du créneau
+            const slotEnd = moment(slot.end); // Moment de fin du créneau
+        
+            // Diviser le créneau en sous-créneaux de 30 minutes
+            let currentTime = slotStart.clone();
+            while (currentTime.isBefore(slotEnd)) {
+                const timeSlotEnd = currentTime.clone().add(30, 'minutes'); // Moment de fin du sous-créneau
+        
+                if (timeSlotEnd.isAfter(slotEnd)) {
+                    break; // Arrêter si le sous-créneau dépasse le moment de fin du créneau
+                }
+        
                 const timeSlot = {
-                    start: formatTime(slot.start),
-                    end: formatTime(slot.end),
+                    start: formatTime(currentTime),
+                    //end: formatTime(timeSlotEnd),
+                    available: 'oui'
                 };
                 availabilityTable.push(timeSlot);
+        
+                currentTime.add(30, 'minutes'); // Passer au sous-créneau suivant
             }
+        
+
         }
 
         // Renvoyer le tableau de disponibilités pour la durée spécifiée
@@ -362,7 +376,7 @@ function formatTime(time) {
 //     // ...
 // }).catch(console.error);
 
-// getReservationHour('TD D', '2023-06-02', '12:00').then((availabilityTable) => {
+// getReservationTime('TD D', '2023-06-02', '01:00').then((availabilityTable) => {
 //     // Afficher le tableau de disponibilités
 //     console.log(availabilityTable);
 //     // ...
