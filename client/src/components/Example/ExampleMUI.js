@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 
-export default function ExempleMUI() {
+export default function ExampleMUI() {
 
   // data comes from backend
   const [data, setData] = React.useState(null);

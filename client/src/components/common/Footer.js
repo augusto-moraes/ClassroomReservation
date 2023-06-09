@@ -1,15 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
-export default class Footer extends Component {
-    render() {
-        return (
-            <div>
-                <footer>
-                    <div class="footer-copyright text-center py-3">Developed with the <i class="fas fa-heart"/> by
-                        <a href="https://portifolioaugusto.000webhostapp.com" target="_blank"> Augusto Moraes</a>
-                    </div>
-                </footer>
-            </div>
-        )
-    }
-}
+export default function ButtonAppBar() {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              a wonderful footer
+            </Typography>
+      </Box>
+    );
+  }
