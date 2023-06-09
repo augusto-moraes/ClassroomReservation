@@ -30,6 +30,7 @@ function Home() {
         Check out the <Link to="/blog">blog</Link> or the{" "}
         <Link to="users">users</Link> section
       </p>
+      <ExampleMUI/>
     </>
   );
 }
