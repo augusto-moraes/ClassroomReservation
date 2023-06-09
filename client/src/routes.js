@@ -7,6 +7,7 @@ import {
 import './routes.css';
 
 import NavBar from "./components/common/NavBar";
+import ExampleMUI from "./components/Example/ExampleMUI";
 
 export default function Root() {
   return (
