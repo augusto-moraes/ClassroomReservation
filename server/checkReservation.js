@@ -6,7 +6,7 @@ const moment = require('moment');
 const dbName = 'classroomReservation';
 
 // Fonction pour effectuer une recherche dans la collection "reservation"
-async function main() {
+async function getReservationRoom(salle, date) {
     // Connexion à la base de données
     const client = new MongoClient(process.env.MONGO_URL);
     try {
@@ -20,8 +20,11 @@ async function main() {
 
         // Requête de recherche
         const query = {
-            Salle: 'TD D',
-            'heure debut': { $gte: '20230602 08:00:00', $lt: '20230602 23:00:00' },
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD HH:mm:ss'),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
         };
 
         const reservations = await collection.find(query).toArray();
@@ -55,6 +58,220 @@ async function main() {
         await client.close();
     }
 }
+
+async function getReservationHour(salle, date, heure) {
+    // Connexion à la base de données
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+
+        // Sélection de la base de données
+        const db = client.db(dbName);
+
+        // Sélection de la collection
+        const collection = db.collection('reservation');
+
+        // Requête de recherche
+        const query = {
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD ' + heure),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
+        };
+
+        const reservations = await collection.find(query).toArray();
+
+        // Appeler la fonction pour calculer les plages de créneaux disponibles
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+
+        // Construire le tableau de disponibilités
+        const availabilityTable = [];
+
+        const startTime = moment('2023-06-02T' + heure + ':00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const endTime = moment('2023-06-02T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const timeSlotDuration = 30; // Durée du créneau en minutes
+
+        let currentTime = startTime;
+
+        while (currentTime <= endTime) {
+            const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+            const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
+            const timeSlot = {
+                time: formatTime(currentTime),
+                available: isAvailable ? 'oui' : 'non',
+            };
+            availabilityTable.push(timeSlot);
+            currentTime = nextTime;
+        }
+
+        // Renvoyer le tableau de disponibilités
+        return availabilityTable;
+    } finally {
+        // Fermeture de la connexion à la base de données
+        await client.close();
+    }
+}
+
+async function getReservationTime(salle, date, duree) {
+    // Connexion à la base de données
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+
+        // Sélection de la base de données
+        const db = client.db(dbName);
+
+        // Sélection de la collection
+        const collection = db.collection('reservation');
+
+        // Requête de recherche
+        const query = {
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD HH:mm:ss'),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
+        };
+
+        const reservations = await collection.find(query).toArray();
+
+        // Appeler la fonction pour calculer les plages de créneaux disponibles
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+
+        // Construire le tableau de disponibilités pour la durée spécifiée
+        const availabilityTable = [];
+        const timeSlotDuration = moment.duration(duree).asMinutes(); // Durée du créneau en minutes
+
+        // Parcourir les créneaux disponibles et vérifier leur durée
+        for (const slot of availableTimeSlots) {
+            const slotDuration = moment(slot.end).diff(slot.start, 'minutes');
+
+            if (slotDuration >= timeSlotDuration) {
+
+                const timeSlot = {
+                    start: formatTime(slot.start),
+                    end: formatTime(slot.end),
+                };
+                availabilityTable.push(timeSlot);
+            }
+        }
+
+        // Renvoyer le tableau de disponibilités pour la durée spécifiée
+        return availabilityTable;
+    } finally {
+        // Fermeture de la connexion à la base de données
+        await client.close();
+    }
+}
+
+
+async function getReservationHourTime(salle, date, heure, duree) {
+    // Connexion à la base de données
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+
+        // Sélection de la base de données
+        const db = client.db(dbName);
+
+        // Sélection de la collection
+        const collection = db.collection('reservation');
+
+        // Requête de recherche
+        const query = {
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD HH:mm:ss'),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
+        };
+
+        const reservations = await collection.find(query).toArray();
+
+        // Appeler la fonction pour calculer les plages de créneaux disponibles
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+
+        // Construire le tableau de disponibilités
+        const availabilityTable = [];
+        const startTime = moment('2023-06-02T08:00:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const endTime = moment('2023-06-02T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const timeSlotDuration = 30; // Durée du créneau en minutes
+
+        let currentTime = startTime;
+
+        while (currentTime <= endTime) {
+            const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+            const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
+            const timeSlot = {
+                time: formatTime(currentTime),
+                available: isAvailable ? 'oui' : 'non',
+            };
+            availabilityTable.push(timeSlot);
+            currentTime = nextTime;
+        }
+
+        // Renvoyer le tableau de disponibilités
+        return availabilityTable;
+    } finally {
+        // Fermeture de la connexion à la base de données
+        await client.close();
+    }
+}
+
+async function checkReservationRoom(salle, date) {
+    // Connexion à la base de données
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+
+        // Sélection de la base de données
+        const db = client.db(dbName);
+
+        // Sélection de la collection
+        const collection = db.collection('reservation');
+
+        // Requête de recherche
+        const query = {
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD HH:mm:ss'),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
+        };
+
+        const reservations = await collection.find(query).toArray();
+
+        // Appeler la fonction pour calculer les plages de créneaux disponibles
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+
+        // Construire le tableau de disponibilités
+        const availabilityTable = [];
+        const startTime = moment('2023-06-02T08:00:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const endTime = moment('2023-06-02T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const timeSlotDuration = 30; // Durée du créneau en minutes
+
+        let currentTime = startTime;
+
+        while (currentTime <= endTime) {
+            const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+            const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
+            const timeSlot = {
+                time: formatTime(currentTime),
+                available: isAvailable ? 'oui' : 'non',
+            };
+            availabilityTable.push(timeSlot);
+            currentTime = nextTime;
+        }
+
+        // Renvoyer le tableau de disponibilités
+        return availabilityTable;
+    } finally {
+        // Fermeture de la connexion à la base de données
+        await client.close();
+    }
+}
+
 
 // Création d'une fonction pour calculer les plages de créneaux de 30 minutes disponibles
 function calculateAvailableTimeSlots(reservations) {
@@ -131,16 +348,28 @@ function isTimeSlotAvailable(startTime, endTime, availableTimeSlots) {
     return false;
 }
 
+
+
 // Formater le créneau horaire au format 'HH:mm'
 function formatTime(time) {
     return moment(time).format('HH[h]mm');
 }
 
-// Appeler la fonction principale
-main().then((availabilityTable) => {
-    // Afficher le tableau de disponibilités
+// // Appeler la fonction principale
+// getReservationRoom('TD D', '2023-06-02').then((availabilityTable) => {
+//     // Afficher le tableau de disponibilités
+//     console.log(availabilityTable);
+//     // ...
+// }).catch(console.error);
+
+// getReservationHour('TD D', '2023-06-02', '12:00').then((availabilityTable) => {
+//     // Afficher le tableau de disponibilités
+//     console.log(availabilityTable);
+//     // ...
+// }).catch(console.error);
+
+getReservationTime('TD D', '2023-06-02', '02:00').then((availabilityTable) => {
+    // Afficher le tableau de disponibilités pour la durée spécifiée
     console.log(availabilityTable);
-    availabilityTable.forEach((slot) => {
-        console.log(slot.time + ', ' + slot.available);
-    });
+    // ...
 }).catch(console.error);
