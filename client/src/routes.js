@@ -11,13 +11,15 @@ import ExampleMUI from "./components/Example/ExampleMUI";
 
 export default function Root() {
   return (
-    <div className="App">
+    <div>
         <NavBar />
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blog/*" element={<BlogApp />} />
-            <Route path="/users/*" element={<UserApp />} />
-        </Routes>
+        <div className="App">
+            <Routes>
+                <Route path="/" element={<Home />}/>
+                <Route path="/reservation" element={<BlogApp />} />
+                <Route path="/schedule" element={<UserApp />} />
+            </Routes>
+        </div>
     </div>
   );
 }

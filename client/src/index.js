@@ -19,7 +19,7 @@ const theme = createTheme({
 });
 
 const router = createBrowserRouter([
-  { path: "*", Component: Root },
+  { path: "*", Component: Root},
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
