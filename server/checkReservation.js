@@ -252,8 +252,6 @@ async function getReservationHourTime(salle, date, heure, duree) {
     }
 }
 
-
-
 async function getReservationHourTime(salle, date, heure, duree) {
     // Connexion à la base de données
     const client = new MongoClient(process.env.MONGO_URL);
@@ -326,8 +324,7 @@ async function getReservationHourTime(salle, date, heure, duree) {
 
 
 async function checkReservationHourTime(salle, date, heure, duree) {
-    // ... Votre code existant ...
-
+    
     const availabilityTable = await getReservationHourTime(salle, date, heure, duree)
     // Vérifier si tous les éléments ont la propriété 'available' égale à 'oui'
     const allAvailable = availabilityTable.every(slot => slot.available === 'oui');
