@@ -252,7 +252,7 @@ async function getReservationHourTime(salle, date, heure, duree) {
     }
 }
 
-async function getReservationHourTime(salle, date, heure, duree) {
+async function getReservationHourTimeforcheck(salle, date, heure, duree) {
     // Connexion à la base de données
     const client = new MongoClient(process.env.MONGO_URL);
     try {
@@ -324,8 +324,8 @@ async function getReservationHourTime(salle, date, heure, duree) {
 
 
 async function checkReservationHourTime(salle, date, heure, duree) {
-    
-    const availabilityTable = await getReservationHourTime(salle, date, heure, duree)
+
+    const availabilityTable = await getReservationHourTimeforcheck(salle, date, heure, duree)
     // Vérifier si tous les éléments ont la propriété 'available' égale à 'oui'
     const allAvailable = availabilityTable.every(slot => slot.available === 'oui');
 
@@ -441,8 +441,10 @@ function formatTime(time) {
 //     // ...
 // }).catch(console.error);
 
-checkReservationHourTime('TD D', '2023-06-02', '08:00', '02:00').then((availabilityTable) => {
-    // Afficher le tableau de disponibilités pour la durée spécifiée
-    console.log(availabilityTable);
-    // ...
-}).catch(console.error);
+// checkReservationHourTime('TD D', '2023-06-02', '08:00', '02:00').then((availabilityTable) => {
+//     // Afficher le tableau de disponibilités pour la durée spécifiée
+//     console.log(availabilityTable);
+//     // ...
+// }).catch(console.error);
+
+module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime };
