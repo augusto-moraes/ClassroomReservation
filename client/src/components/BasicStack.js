@@ -15,9 +15,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function BasicStack() {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '70%' }}>
       <Stack spacing={2}>
-        <Item><AutoGrid></AutoGrid>
+        <Item>
         </Item>
         <Item>Item 2</Item>
         <Item>Item 3</Item>
