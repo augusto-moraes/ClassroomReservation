@@ -332,6 +332,41 @@ async function checkReservationHourTime(salle, date, heure, duree) {
     return allAvailable;
 }
 
+async function getReservationRoomSecond(salle, date) {
+    // Connexion à la base de données
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+
+        // Sélection de la base de données
+        const db = client.db(dbName);
+
+        // Sélection de la collection
+        const collection = db.collection('reservation');
+
+        // Requête de recherche
+        const query = {
+            Salle: salle,
+            'heure debut': {
+                $gte: moment(date).startOf('day').format('YYYYMMDD HH:mm:ss'),
+                $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
+            },
+        };
+
+        const reservations = await collection.find(query).toArray();
+
+        const reservationHours = reservations.map(reservation => ({
+            id: salle,
+            start: moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').toISOString(),
+            end: moment(reservation['heure fin'], 'YYYYMMDD HH:mm:ss').toISOString()
+        }));
+
+        return reservationHours;
+    } finally {
+        await client.close();
+    }
+}
+
 
 
 // Création d'une fonction pour calculer les plages de créneaux de 30 minutes disponibles
@@ -447,4 +482,11 @@ function formatTime(time) {
 //     // ...
 // }).catch(console.error);
 
-module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime };
+// Appeler la fonction principale
+// getReservationRoomSecond('TD D', '2023-06-02').then((reservationHours) => {
+//     // Afficher le tableau de disponibilités
+//     console.log(reservationHours);
+//     // ...
+// }).catch(console.error);
+
+module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond };

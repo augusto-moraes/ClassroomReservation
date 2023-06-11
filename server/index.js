@@ -1,7 +1,7 @@
 //import { getReservationRoom } from './checkReservation';
 
 const express = require("express");
-const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime } = require('./checkReservation');
+const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
 
 const PORT = process.env.PORT || 3001;
 
@@ -89,5 +89,17 @@ app.get('/checkReservationHourTime', async (req, res) => {
         res.send('Réservation disponible pour l\'heure spécifique : ' + isReserved);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la vérification de disponibilité d\'heure spécifique');
+    }
+});
+
+app.get('/getReservationRoomSecond', async (req, res) => {
+    const { salle, date } = req.query;
+
+    try {
+        const reservationHours = await getReservationRoomSecond(salle, date);
+        res.json(reservationHours);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des horaires de réservation.' });
     }
 });
