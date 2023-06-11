@@ -15,11 +15,6 @@ export default function ReservationPage() {
     <div style={{backgroundColor:'#F7F7F7'}}>
 
         <div>
-        <ButtonAppBar></ButtonAppBar>
-        </div>
-
-
-        <div>
         <FiltresRecherche></FiltresRecherche>
         </div>
 

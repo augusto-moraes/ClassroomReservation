@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ReservationPage from './components/reservation/ReservationPage';
+import ReservationPage from '../reservation/ReservationPage';
 
 export default function ExampleMUI() {
 
@@ -16,7 +16,6 @@ export default function ExampleMUI() {
 
   return (
     <>
-      <ReservationPage></ReservationPage>
     </>
 
   );
