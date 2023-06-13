@@ -34,7 +34,10 @@ async function addResa(salle, cours, heureDebut, heureFin, user, participants, n
 }
 
 //appel de la fonction addResa
-addResa ('TD A', "LALALA", "20230530 08:00:00", "20230530 10:00:00", "", ['arthur', 'bastien'], 3, "INSA")
-    .then(console.log)
-    .catch(console.error)
-    .finally(client.close())
+// addResa ('TD A', "LALALA", "20230530 08:00:00", "20230530 10:00:00", "", ['arthur', 'bastien'], 3, "INSA")
+//     .then(console.log)
+//     .catch(console.error)
+//     .finally(client.close())
+
+
+module.exports = { addResa };

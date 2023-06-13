@@ -2,6 +2,7 @@
 
 const express = require("express");
 const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
+const { addResa } = require ('./addReservations');
 
 const PORT = process.env.PORT || 3001;
 
@@ -101,5 +102,18 @@ app.get('/getReservationRoomSecond', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des horaires de réservation.' });
+    }
+});
+
+//requete pour post une nouvelle reservation
+app.post('/addResa', async (req, res) => {
+    const { salle, cours, heureDebut, heureFin, user, participants, nb, portee } = req.body;
+
+    try {
+        const add = await addResa(salle, cours, heureDebut, heureFin, user, participants, nb, portee);
+        res.json(add);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
     }
 });
