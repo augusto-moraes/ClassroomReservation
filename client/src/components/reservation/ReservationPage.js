@@ -19,7 +19,7 @@ export default function ReservationPage() {
         </div>
 
         <div>   
-        <Salle></Salle>
+        <Salle salle={"TDC"}></Salle>
         </div>
 
     </div>
