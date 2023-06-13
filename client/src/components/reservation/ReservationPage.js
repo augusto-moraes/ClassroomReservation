@@ -5,6 +5,8 @@ import FiltresRecherche from './FiltresRecherche';
 
 export default function ReservationPage() {
 
+  const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E'];
+
     // States
 
     // Const
@@ -15,11 +17,13 @@ export default function ReservationPage() {
     <div style={{backgroundColor:'#F7F7F7'}}>
 
         <div>
-        <FiltresRecherche></FiltresRecherche>
+          <FiltresRecherche />
         </div>
 
         <div>   
-        <Salle salle={"TDC"}></Salle>
+          {salles.map((salle) => (
+            <Salle salle={salle}/>
+          ))}
         </div>
 
     </div>
