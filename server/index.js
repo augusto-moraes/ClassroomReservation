@@ -2,7 +2,8 @@
 
 const express = require("express");
 const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
-const { addResa } = require ('./addReservations');
+const { addResa } = require('./addReservations');
+const { deleteResa } = require('./deleteReservation');
 
 const PORT = process.env.PORT || 3001;
 
@@ -27,8 +28,7 @@ app.get('/getRoomReservation', async (req, res) => {
 
         // Utiliser les paramètres dans l'appel à getReservationRoom
         const rooms = await getReservationRoom(salle, date);
-        const roomDetails = rooms.map(room => JSON.stringify(room));
-        res.send('Réservation de la salle : ' + roomDetails.join(', '));
+        res.json(rooms);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation de chambre');
     }
@@ -41,8 +41,7 @@ app.get('/getReservationHour', async (req, res) => {
         const date = req.query.date;
 
         const hours = await getReservationHour(salle, date);
-
-        res.send('Réservation d\'heure : ' + hours.join(', '));
+        res.json(hours);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure');
     }
@@ -55,8 +54,7 @@ app.get('/getReservationHourTime', async (req, res) => {
         const heure = req.query.heure;
 
         const hourTime = await getReservationHourTime(salle, date, heure);
-
-        res.send('Réservation d\'heure spécifique : ' + JSON.stringify(hourTime));
+        res.json(hourTime);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure spécifique');
     }
@@ -70,9 +68,7 @@ app.get('/getReservationTime', async (req, res) => {
         const fin = req.query.fin;
 
         const timeSlots = await getReservationTime(salle, date, debut, fin);
-
-
-        res.send('Réservation dans la plage horaire : ' + JSON.stringify(timeSlots));
+        res.json(timeSlots);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation dans la plage horaire');
     }
@@ -117,3 +113,18 @@ app.post('/addResa', async (req, res) => {
         res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
     }
 });
+
+app.delete('/deleteReservation', async (req, res) => {
+    const salle = req.query.salle;
+    const heureDebut = req.query.heureDebut;
+    const heureFin = req.query.heureFin;
+
+    try {
+        await deleteResa(salle, heureDebut, heureFin);
+        res.status(200).send('Reservation deleted successfully.');
+    } catch (error) {
+        console.error(error);
+        res.status(404).send('An error occurred while deleting the reservation.');
+    }
+});
+
