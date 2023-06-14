@@ -17,6 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+
 export default function AutoGrid() {
   const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
   const heures = ['8h', '8h30', '9h', '9h30', '10h', '10h30', '11h', '11h30', '12h', '12h30', '13h', '13h30', '14h', '14h30', '15h', '15h30', '16h', '16h30', '17h', '17h30', '18h', '18h30', '19h', '19h30', '20h', '20h30', '21h', '21h30', '22h', '22h30'];
@@ -43,6 +44,27 @@ export default function AutoGrid() {
     setSelectedDate(value);
   };
 
+  //fonction qui crée la requête
+  function queryBuilding(salle, date, heure, duree) {
+    const salleURI = encodeURIComponent(salle);
+    return 'http://localhost:3001/getRoomReservation?salle='+salleURI+'&date='+date;
+  }
+
+  //fonction appelée à chaque click sur valider
+  const handleValidation = () => {
+    const apiUrl = queryBuilding(selectedSalle, selectedDate, selectedHeure, selectedDuree);
+  
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        // Traitement les données de réservation de salle ici : affichage des salles
+      })
+      .catch(error => {
+        console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
+      });
+  };
+  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={6}>
@@ -61,7 +83,7 @@ export default function AutoGrid() {
         </Grid>
         <Grid item xs>
           <Item>
-            <Button size='small' endIcon={<SendIcon />} > Valider </Button>
+            <Button size='small' endIcon={<SendIcon />} > onClick={handleValidation} Valider </Button>
             <div style={{marginBottom:4}}>
             <Button size='small' endIcon={<RefreshIcon/>}> Réinitialiser </Button>
             </div>
