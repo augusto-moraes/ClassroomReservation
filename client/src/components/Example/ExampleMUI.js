@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import ReservationPage from '../reservation/ReservationPage';
 
 export default function ExampleMUI() {
 
@@ -13,9 +13,10 @@ export default function ExampleMUI() {
       .then((data) => setData(data.message));
   }, []);
 
+
   return (
-    <div>
-      <Button variant="contained">{!data ? "Loading..." : data}</Button>
-    </div>
+    <>
+    </>
+
   );
 }

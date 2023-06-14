@@ -8,16 +8,21 @@ import './routes.css';
 
 import NavBar from "./components/common/NavBar";
 import ExampleMUI from "./components/Example/ExampleMUI";
+import ReservationPage from "./components/reservation/ReservationPage";
+import Footer from "./components/common/Footer";
 
 export default function Root() {
   return (
-    <div className="App">
+    <div>
         <NavBar />
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blog/*" element={<BlogApp />} />
-            <Route path="/users/*" element={<UserApp />} />
-        </Routes>
+        <div className="App" style={{backgroundColor:'#F7F7F7'}}>
+            <Routes>
+                <Route path="/" element={<Home />}/>
+                <Route path="/reservation" element={<ReservationPage />} />
+                <Route path="/schedule" element={<UserApp />} />
+            </Routes>
+        </div>
+        <Footer />
     </div>
   );
 }
@@ -30,16 +35,8 @@ function Home() {
         Check out the <Link to="/blog">blog</Link> or the{" "}
         <Link to="users">users</Link> section
       </p>
+      <ExampleMUI/>
     </>
-  );
-}
-
-function BlogApp() {
-  return (
-    <Routes>
-      <Route index element={<h1>Blog Index</h1>} />
-      <Route path="posts" element={<h1>Blog Posts</h1>} />
-    </Routes>
   );
 }
 
