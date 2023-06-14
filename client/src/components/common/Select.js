@@ -14,7 +14,10 @@ export default function BasicSelect({options = ['nothing here'], placeholder=''}
 
   return (
     <Box sx={{ minWidth: 120 }}>
+            <div style={{marginTop: 8}}>
       <FormControl fullWidth>
+
+
         <InputLabel id="demo-simple-select-label">{placeholder}</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -27,7 +30,9 @@ export default function BasicSelect({options = ['nothing here'], placeholder=''}
             <MenuItem value={option}>{option}</MenuItem>
           ))}
         </Select>
+       
       </FormControl>
+      </div>
     </Box>
   );
 }

@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import BasicSelect from '../common/Select';
 import { Button } from '@mui/material';
+import BasicDatePicker from '../common/BasicDatePicker';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,7 +23,10 @@ export default function AutoGrid() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={5}>
+      <Grid item xs>
+          <Item><BasicDatePicker></BasicDatePicker></Item>
+        </Grid>
         <Grid item xs>
           <Item><BasicSelect options={salles} placeholder='Salle'/></Item>
         </Grid>
