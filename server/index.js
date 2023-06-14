@@ -31,13 +31,13 @@ cas = new CASAuthentication({
 
 // get loged user or login 
 // /!\ WARNING : Auth queries MUST be written BEFORE app.use('\', cas.bounce)
-app.get('/user', cas.bounce, (req, res) => { res.send(req.session.cas_user) });
+app.get('/user', cas.bounce, (req, res) => { res.send(req.session.cas_user); console.log("getUser") });
 
 // CAS logout
 app.get('/logout', cas.logout);
 
 // requires CAS login to access all queries
-app.use('/', cas.bounce);
+//app.use('/', cas.bounce);
 
 // test api
 app.get("/api", (req, res) => {

@@ -12,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { Link } from 'react-router-dom';
 
 const pages = [
   {
@@ -23,11 +24,17 @@ const pages = [
     href: "schedule"
   }
 ];
-const settings = ['Logout', 'MyReservations'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user, setData] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch("/api")
+      .then((res) => res.json())
+      .then((data) => setData(data.message));
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -43,6 +50,11 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    fetch("\logout");
+    setAnchorElUser(null);
+  }
 
   return (
     <AppBar position="static">
@@ -135,15 +147,13 @@ function NavBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip>
-              <IconButton onClick={handleOpenUserMenu} 
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                >
-                <AccountCircle />
-              </IconButton>
+              <Button
+                key={user ? user : "Login"}
+                onClick={handleOpenUserMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {user ? user : "Login"}
+              </Button>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
@@ -161,11 +171,10 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key={'logout'} onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem key={'MyReservations'} component={Link} to="/myReservations" onClick={handleCloseUserMenu}>
+                MyReservations
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

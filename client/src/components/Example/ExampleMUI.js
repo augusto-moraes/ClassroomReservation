@@ -14,6 +14,6 @@ export default function ExampleMUI() {
 
 
   return (
-    <p>{data ? data : "data not found"}</p>
+    <p>This is data : {data}</p>
   );
 }
