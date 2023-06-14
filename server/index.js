@@ -27,7 +27,7 @@ app.use(session( {
   
 cas = new CASAuthentication({
 	cas_url: 'https://login.insa-lyon.fr/cas',
-	service_url: 'http://tc405-114-14.insa-lyon.fr:3000',
+	service_url: 'http://tc405-112-14.insa-lyon.fr:3000',
 	returnTo: '/'
 });
 
