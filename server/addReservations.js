@@ -14,7 +14,7 @@ async function addResa(salle, cours, heureDebut, heureFin, user, participants, n
         console.log('connection OK !');
 
         const insertData = await collection.insertMany([
-            {               
+            {
                 Salle: salle,
                 Cours: cours,
                 'heure debut': heureDebut,
@@ -28,13 +28,13 @@ async function addResa(salle, cours, heureDebut, heureFin, user, participants, n
 
         console.log('réservation ajoutée ! =>', insertData);
 
-    } catch(e) {throw e; }
-    
+    } catch (e) { throw e; }
+    await client.close();
     return 'done !'
 }
 
 //appel de la fonction addResa
-// addResa ('TD A', "LALALA", "20230530 08:00:00", "20230530 10:00:00", "", ['arthur', 'bastien'], 3, "INSA")
+// addResa('TD A', "LALALA", "20230529 16:00:00", "20230529 18:00:00", "toto", ['arthur', 'bastien'], 3, "INSA")
 //     .then(console.log)
 //     .catch(console.error)
 //     .finally(client.close())

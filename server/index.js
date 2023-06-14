@@ -1,7 +1,7 @@
 //import { getReservationRoom } from './checkReservation';
 
 const express = require("express");
-const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
+const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser } = require('./checkReservation');
 const { addResa } = require('./addReservations');
 const { deleteResa } = require('./deleteReservation');
 
@@ -100,6 +100,19 @@ app.get('/getReservationRoomSecond', async (req, res) => {
         res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des horaires de réservation.' });
     }
 });
+
+app.get('/getReservationUser', async (req, res) => {
+    const user = req.query.user;
+
+    try {
+        const reservations = await getReservationUser(user);
+        res.status(200).json(reservations);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the reservations.');
+    }
+});
+
 
 //requete pour post une nouvelle reservation
 app.post('/addResa', async (req, res) => {
