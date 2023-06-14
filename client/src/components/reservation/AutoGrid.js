@@ -25,6 +25,7 @@ export default function AutoGrid() {
   const [selectedSalle, setSelectedSalle] = React.useState('');
   const [selectedHeure, setSelectedHeure] = React.useState('');
   const [selectedDuree, setSelectedDuree] = React.useState('');
+  const [selectedDate, setSelectedDate] = React.useState(null);
 
   const handleSalleChange = (value) => {
     setSelectedSalle(value);
@@ -38,11 +39,16 @@ export default function AutoGrid() {
     setSelectedDuree(value);
   };
 
+  const handleDateChange = (value) => {
+    setSelectedDate(value);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={6}>
       <Grid item xs>
-          <Item><BasicDatePicker></BasicDatePicker></Item>
+          <Item><BasicDatePicker onDateChange={handleDateChange} ></BasicDatePicker></Item>
+          {/* <p> date : {selectedDate && selectedDate.format("YYYY-MM-DD")} </p> */}
         </Grid>
         <Grid item xs>
           <Item><BasicSelect options={salles} placeholder='Salle' onChange={handleSalleChange}/></Item>
