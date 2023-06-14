@@ -39,6 +39,7 @@ export default function AutoGrid() {
   };
 
   return (
+    <div style={{marginLeft:50, marginRight:50}}>
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={6}>
       <Grid item xs>
@@ -64,5 +65,6 @@ export default function AutoGrid() {
         
       </Grid>
     </Box>
+    </div>
   );
 }
