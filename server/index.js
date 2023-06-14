@@ -1,93 +1,117 @@
-// To connect with your mongoDB database
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/', {
-    dbName: 'ClassroomReservation',
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+//import { getReservationRoom } from './checkReservation';
 
-// Schema for users of app
-const ReservationsSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true,
-	},
-	desc: {
-		type: String,
-	},
-	desc: {
-		type: String,
-		required: true,
-		unique: true,
-	},
-	date: {
-		type: Date,
-		default: Date.now,
-	},
-});
-
-const User = mongoose.model('users', ReservationsSchema);
-User.createIndexes();
-
-// For backend and express
-const express = require('express');
-const cors = require("cors");
-
-const session = require('express-session')
-const CASAuthentication = require('cas-authentication')
+const express = require("express");
+const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
+const { addResa } = require ('./addReservations');
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
-
-app.listen(1234)
-
-app.use(session( {
-	secret: '12087371912',
-	resave: false,
-	saveUninitialized : true,
-}))
-  
-cas = new CASAuthentication({
-	cas_url: 'https://login.insa-lyon.fr/cas',
-	service_url: 'http://10.10.10.10.insa-lyon.fr:1234',
-	returnTo: '/'
-})
-
-app.get("/", cas.bounce, (req, resp) => {
-	resp.send("App is Working");
-	// You can check backend is working or not by
-	// entering http://loacalhost:3001
-	
-	// If you see App is working means
-	// backend working properly
-});
-
 app.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
 });
 
-app.post("/register", async (req, resp) => {
-	try {
-		const user = new User(req.body);
-		let result = await user.save();
-		result = result.toObject();
-		if (result) {
-			delete result.password;
-			resp.send(req.body);
-			console.log(result);
-		} else {
-			console.log("User already register");
-		}
-
-	} catch (e) {
-		resp.send("Something Went Wrong");
-	}
-});
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
+});
+
+
+app.get('/getRoomReservation', async (req, res) => {
+    try {
+        const salle = req.query.salle; // Récupérer le paramètre "salle" de l'URL
+        const date = req.query.date; // Récupérer le paramètre "date" de l'URL
+
+        // Utiliser les paramètres dans l'appel à getReservationRoom
+        const rooms = await getReservationRoom(salle, date);
+        const roomDetails = rooms.map(room => JSON.stringify(room));
+        res.send('Réservation de la salle : ' + roomDetails.join(', '));
+    } catch (error) {
+        res.status(500).send('Une erreur est survenue lors de la récupération de la réservation de chambre');
+    }
+});
+
+
+app.get('/getReservationHour', async (req, res) => {
+    try {
+        const salle = req.query.salle;
+        const date = req.query.date;
+
+        const hours = await getReservationHour(salle, date);
+
+        res.send('Réservation d\'heure : ' + hours.join(', '));
+    } catch (error) {
+        res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure');
+    }
+});
+
+app.get('/getReservationHourTime', async (req, res) => {
+    try {
+        const salle = req.query.salle;
+        const date = req.query.date;
+        const heure = req.query.heure;
+
+        const hourTime = await getReservationHourTime(salle, date, heure);
+
+        res.send('Réservation d\'heure spécifique : ' + JSON.stringify(hourTime));
+    } catch (error) {
+        res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure spécifique');
+    }
+});
+
+app.get('/getReservationTime', async (req, res) => {
+    try {
+        const salle = req.query.salle;
+        const date = req.query.date;
+        const debut = req.query.debut;
+        const fin = req.query.fin;
+
+        const timeSlots = await getReservationTime(salle, date, debut, fin);
+
+
+        res.send('Réservation dans la plage horaire : ' + JSON.stringify(timeSlots));
+    } catch (error) {
+        res.status(500).send('Une erreur est survenue lors de la récupération de la réservation dans la plage horaire');
+    }
+});
+
+app.get('/checkReservationHourTime', async (req, res) => {
+    try {
+        const salle = req.query.salle;
+        const date = req.query.date;
+        const heure = req.query.heure;
+
+        const isReserved = await checkReservationHourTime(salle, date, heure);
+        // so what ?
+
+        res.send('Réservation disponible pour l\'heure spécifique : ' + isReserved);
+    } catch (error) {
+        res.status(500).send('Une erreur est survenue lors de la vérification de disponibilité d\'heure spécifique');
+    }
+});
+
+app.get('/getReservationRoomSecond', async (req, res) => {
+    const { salle, date } = req.query;
+
+    try {
+        const reservationHours = await getReservationRoomSecond(salle, date);
+        res.json(reservationHours);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des horaires de réservation.' });
+    }
+});
+
+//requete pour post une nouvelle reservation
+app.post('/addResa', async (req, res) => {
+    const { salle, cours, heureDebut, heureFin, user, participants, nb, portee } = req.body;
+
+    try {
+        const add = await addResa(salle, cours, heureDebut, heureFin, user, participants, nb, portee);
+        res.json(add);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
+    }
 });
