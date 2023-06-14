@@ -14,7 +14,7 @@ export default function ReservationPage() {
     // Functions
 
   return (
-    <div style={{backgroundColor:'#F7F7F7'}}>
+    <div>
 
         <div>
           <FiltresRecherche />

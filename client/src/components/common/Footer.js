@@ -1,13 +1,13 @@
 import React from 'react'
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-export default function ButtonAppBar() {
+export default function Footer() {
     return (
-      <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              a wonderful footer
-            </Typography>
+      <Box style={{textAlign:'center'}}>
+        <p>
+            a wonderful footer made with the <FavoriteIcon/> 
+        </p>
       </Box>
     );
   }
