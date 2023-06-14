@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ReservationPage from '../reservation/ReservationPage';
 
 export default function ExampleMUI() {
 
@@ -15,8 +14,6 @@ export default function ExampleMUI() {
 
 
   return (
-    <>
-    </>
-
+    <p>{data ? data : "data not found"}</p>
   );
 }

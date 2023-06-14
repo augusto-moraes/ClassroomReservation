@@ -17,8 +17,6 @@ const PORT = process.env.PORT || 3001;
 const session = require('express-session');
 const CASAuthentication = require('cas-authentication');
 
-app.listen(1234);
-
 app.use(session( {
 	secret: '12087371912',
 	resave: false,
@@ -27,22 +25,28 @@ app.use(session( {
   
 cas = new CASAuthentication({
 	cas_url: 'https://login.insa-lyon.fr/cas',
-	service_url: 'http://tc405-112-14.insa-lyon.fr:3000',
+	service_url: 'http://tc405-112-14.insa-lyon.fr:3001',
 	returnTo: '/'
 });
 
-app.use('/', cas.bounce, function (req, res) { res.send("Hello World");  console.log("coucou"); })
+// get loged user or login 
+// /!\ WARNING : Auth queries MUST be written BEFORE app.use('\', cas.bounce)
+app.get('/user', cas.bounce, (req, res) => { res.send(req.session.cas_user) });
+
+// CAS logout
+app.get('/logout', cas.logout);
+
+// requires CAS login to access all queries
+app.use('/', cas.bounce);
 
 // test api
 app.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
 });
 
-
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
-
 
 app.get('/getRoomReservation', async (req, res) => {
     try {

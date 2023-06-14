@@ -23,7 +23,7 @@ const pages = [
     href: "schedule"
   }
 ];
-const settings = ['Logout'];
+const settings = ['Logout', 'MyReservations'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
