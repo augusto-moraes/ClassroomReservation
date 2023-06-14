@@ -23,7 +23,7 @@ export default function AutoGrid() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={5}>
+      <Grid container spacing={6}>
       <Grid item xs>
           <Item><BasicDatePicker></BasicDatePicker></Item>
         </Grid>
@@ -35,8 +35,15 @@ export default function AutoGrid() {
         </Grid>
         <Grid item xs>
           <Item><BasicSelect options={durees} placeholder='Duree'/></Item>
-        </Grid>   
-        <Button> Valider </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Item>
+            <div style={{paddingTop: 10}}>
+            <Button size='large'> Valider </Button>
+            </div>
+            </Item>
+        </Grid>      
+        
       </Grid>
     </Box>
   );
