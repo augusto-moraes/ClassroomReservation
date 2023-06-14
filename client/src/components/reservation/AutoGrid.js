@@ -6,6 +6,8 @@ import Grid from '@mui/material/Grid';
 import BasicSelect from '../common/Select';
 import { Button } from '@mui/material';
 import BasicDatePicker from '../common/BasicDatePicker';
+import SendIcon from '@mui/icons-material/Send';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,10 +38,11 @@ export default function AutoGrid() {
         <Grid item xs>
           <Item><BasicSelect options={durees} placeholder='Duree'/></Item>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs>
           <Item>
-            <div style={{paddingTop: 10}}>
-            <Button size='large'> Valider </Button>
+            <Button size='small' endIcon={<SendIcon />} > Valider </Button>
+            <div>
+            <Button size='small' endIcon={<RefreshIcon/>}> Réinitialiser </Button>
             </div>
             </Item>
         </Grid>      
