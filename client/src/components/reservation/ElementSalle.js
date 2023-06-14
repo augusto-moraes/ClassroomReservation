@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Card } from '@mui/material';
-import BasicButtonGroup from './ButtonGroup';
+import { Card, ToggleButton } from '@mui/material';
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import ColorToggleButton from '../common/ToggleButtonGroup';
 
 export default function Salle({salle = 'TDX', desc = salle + ' est une salle incroyable !'}) {
 
@@ -22,8 +22,8 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
         <div style={{textAlign: "left"}}>
 
         <p>{desc}</p>
-        <BasicButtonGroup title='heure' items={hours}/>
-        <BasicButtonGroup title='durée' items={duree}/>
+        <ColorToggleButton title='heure' items={hours}></ColorToggleButton>
+        <ColorToggleButton title='durée' items={duree}></ColorToggleButton>
         <div style={{textAlign: "right"}}>
         <Button variant="contained" size='small' endIcon={<SendIcon />} > Valider la réservation </Button>
         </div>
