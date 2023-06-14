@@ -16,6 +16,7 @@ export default function BasicSelect({options = ['nothing here'], placeholder='',
   }
 
   return (
+    <div style={{marginTop:8}}>
     <Box sx={{ minWidth: 120 }}>
 
       <FormControl fullWidth>
@@ -35,6 +36,7 @@ export default function BasicSelect({options = ['nothing here'], placeholder='',
         </Select>
       </FormControl>
     </Box>
+    </div>
   );
   
 }

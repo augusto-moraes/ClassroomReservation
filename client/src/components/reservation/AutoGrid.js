@@ -56,7 +56,7 @@ export default function AutoGrid() {
         <Grid item xs>
           <Item>
             <Button size='small' endIcon={<SendIcon />} > Valider </Button>
-            <div>
+            <div style={{marginBottom:4}}>
             <Button size='small' endIcon={<RefreshIcon/>}> Réinitialiser </Button>
             </div>
             </Item>

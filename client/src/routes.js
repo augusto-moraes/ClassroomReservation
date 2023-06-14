@@ -9,11 +9,8 @@ import './routes.css';
 import NavBar from "./components/common/NavBar";
 import ExampleMUI from "./components/Example/ExampleMUI";
 import ReservationPage from "./components/reservation/ReservationPage";
-<<<<<<< HEAD
 import Footer from "./components/common/Footer";
-=======
 import MyReservations from "./components/myReservations/myReservations";
->>>>>>> Matthieu
 
 export default function Root() {
   return (
