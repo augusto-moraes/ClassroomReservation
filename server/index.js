@@ -1,13 +1,39 @@
 //import { getReservationRoom } from './checkReservation';
 
 const express = require("express");
-const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
+const { getReservationRoom, 
+    getReservationHour, 
+    getReservationHourTime, 
+    getReservationTime, 
+    checkReservationHourTime, 
+    getReservationRoomSecond 
+} = require('./checkReservation');
 const { addResa } = require ('./addReservations');
 
+const app = express();
 const PORT = process.env.PORT || 3001;
 
-const app = express();
+// Partie concernant le CAS
+const session = require('express-session');
+const CASAuthentication = require('cas-authentication');
 
+app.listen(1234);
+
+app.use(session( {
+	secret: '12087371912',
+	resave: false,
+	saveUninitialized : true,
+}));
+  
+cas = new CASAuthentication({
+	cas_url: 'https://login.insa-lyon.fr/cas',
+	service_url: 'http://tc405-114-14.insa-lyon.fr:3000',
+	returnTo: '/'
+});
+
+app.use('/', cas.bounce, function (req, res) { res.send("Hello World");  console.log("coucou"); })
+
+// test api
 app.get("/api", (req, res) => {
     res.json({ message: "Hello from server!" });
 });
