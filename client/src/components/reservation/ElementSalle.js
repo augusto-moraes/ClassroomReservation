@@ -15,15 +15,14 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
     const [selectedDuree, setSelectedDuree] = React.useState('');
 
     // Functions
-    const handleDureeChange = (value) => {
-      setSelectedDuree(value);
-      console.log(selectedDuree);
-    };
-  
     const handleHeureChange = (value) => {
       setSelectedHeure(value);
-      console.log(selectedHeure);
     };
+    const handleDureeChange = (value) => {
+      setSelectedDuree(value);
+    };
+  
+
   
 
   return (

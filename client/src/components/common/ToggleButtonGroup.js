@@ -10,7 +10,6 @@ export default function ColorToggleButton({items=['rien'], title='titre', onChan
     if (onChange) {
       onChange(event.target.value);
     }
-    console.log(event.target.value)
   }
 
   return (
