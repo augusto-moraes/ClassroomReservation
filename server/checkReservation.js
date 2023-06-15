@@ -81,14 +81,12 @@ async function getReservationHour(salle, date, heure) {
                 $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
             },
         };
-        console.log(query);
 
         const reservations = await collection.find(query).toArray();
-        console.log(reservations);
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
         const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
-        console.log(availableTimeSlots);
+
 
         // Construire le tableau de disponibilités
         const availabilityTable = [];
@@ -97,7 +95,7 @@ async function getReservationHour(salle, date, heure) {
         const startTime = moment(day + 'T' + heure + ':00', 'YYYY-MM-DDTHH:mm:ss').toDate();
         const endTime = moment(day + 'T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
         const timeSlotDuration = 30; // Durée du créneau en minutes
-        console.log(startTime);
+
 
         let currentTime = startTime;
 
