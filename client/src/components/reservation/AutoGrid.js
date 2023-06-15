@@ -17,7 +17,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
 export default function AutoGrid() {
   const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
   const heures = ['8h', '8h30', '9h', '9h30', '10h', '10h30', '11h', '11h30', '12h', '12h30', '13h', '13h30', '14h', '14h30', '15h', '15h30', '16h', '16h30', '17h', '17h30', '18h', '18h30', '19h', '19h30', '20h', '20h30', '21h', '21h30', '22h', '22h30'];
@@ -46,13 +45,20 @@ export default function AutoGrid() {
 
   //fonction qui crée la requête
   function queryBuilding(salle, date, heure, duree) {
+
+    console.log('requête construite');
+    
     const salleURI = encodeURIComponent(salle);
     return '/getRoomReservation?salle='+salleURI+'&date='+date;
+
   }
 
   //fonction appelée à chaque click sur valider
   const handleValidation = () => {
-    const apiUrl = queryBuilding(selectedSalle, selectedDate, selectedHeure, selectedDuree);
+
+    console.log('bouton valider cliqué');
+
+    const apiUrl = queryBuilding(selectedSalle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure, selectedDuree);
   
     fetch(apiUrl)
       .then(response => response.json())
@@ -83,7 +89,7 @@ export default function AutoGrid() {
         </Grid>
         <Grid item xs>
           <Item>
-            <Button size='small' endIcon={<SendIcon />} > onClick={handleValidation} Valider </Button>
+            <Button size='small' endIcon={<SendIcon />} onClick = {handleValidation}>  Valider </Button>
             <div style={{marginBottom:4}}>
             <Button size='small' endIcon={<RefreshIcon/>}> Réinitialiser </Button>
             </div>
