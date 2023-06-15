@@ -3,7 +3,7 @@ import ButtonAppBar from './AppBar';
 import Salle from './ElementSalle';
 import FiltresRecherche from './FiltresRecherche';
 
-export default function ReservationPage() {
+export default function ReservationPage(salle) {
 
   const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E'];
 

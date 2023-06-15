@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import BasicDatePicker from '../common/BasicDatePicker';
 import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
+//import * from './ReservationPage';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -47,7 +48,7 @@ export default function AutoGrid() {
   function queryBuilding(salle, date, heure, duree) {
 
     console.log('requête construite');
-    
+
     const salleURI = encodeURIComponent(salle);
     return '/getRoomReservation?salle='+salleURI+'&date='+date;
 
@@ -59,12 +60,14 @@ export default function AutoGrid() {
     console.log('bouton valider cliqué');
 
     const apiUrl = queryBuilding(selectedSalle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure, selectedDuree);
-  
+    console.log(apiUrl);
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
         // Traitement les données de réservation de salle ici : affichage des salles
+        console.log(data);
       })
+
       .catch(error => {
         console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
       });
