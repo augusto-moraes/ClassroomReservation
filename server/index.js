@@ -27,8 +27,7 @@ app.get('/getRoomReservation', async (req, res) => {
 
         // Utiliser les paramètres dans l'appel à getReservationRoom
         const rooms = await getReservationRoom(salle, date);
-        const roomDetails = rooms.map(room => JSON.stringify(room));
-        res.send('Réservation de la salle : ' + roomDetails.join(', '));
+        res.json(rooms);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation de chambre');
     }

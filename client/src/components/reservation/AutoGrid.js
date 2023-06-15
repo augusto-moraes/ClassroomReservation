@@ -47,7 +47,7 @@ export default function AutoGrid() {
   //fonction qui crée la requête
   function queryBuilding(salle, date, heure, duree) {
     const salleURI = encodeURIComponent(salle);
-    return 'http://localhost:3001/getRoomReservation?salle='+salleURI+'&date='+date;
+    return '/getRoomReservation?salle='+salleURI+'&date='+date;
   }
 
   //fonction appelée à chaque click sur valider
