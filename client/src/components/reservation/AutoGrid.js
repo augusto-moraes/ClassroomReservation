@@ -18,7 +18,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AutoGrid() {
+export default function AutoGrid({ setReservationTimes }) {
   const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
   const heures = ['8h', '8h30', '9h', '9h30', '10h', '10h30', '11h', '11h30', '12h', '12h30', '13h', '13h30', '14h', '14h30', '15h', '15h30', '16h', '16h30', '17h', '17h30', '18h', '18h30', '19h', '19h30', '20h', '20h30', '21h', '21h30', '22h', '22h30'];
   const durees = ['30min', '1h', '1h30', '2h'];
@@ -68,6 +68,7 @@ export default function AutoGrid() {
         const times = data.map(item => item.time);
         console.log(times);
         //exporter times et l'importer dans Reservation page....
+        setReservationTimes(times);
       })
 
       .catch(error => {

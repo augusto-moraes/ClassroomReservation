@@ -1,8 +1,9 @@
 import * as React from 'react';
 import AutoGrid from './AutoGrid';
+import {useState} from 'react';
 
 
-export default function FiltresRecherche() {
+export default function FiltresRecherche({setReservationTimes}) {
 
     // States
 
@@ -13,7 +14,7 @@ export default function FiltresRecherche() {
   return (
 
     <div style={{ margin: 30 }}>
-          <AutoGrid></AutoGrid>
+          <AutoGrid setReservationTimes={setReservationTimes}/>
     </div>
 
 
