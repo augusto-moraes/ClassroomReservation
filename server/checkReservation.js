@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const moment = require('moment');
+const { log } = require('console');
 
 // Nom de la base de données
 const dbName = 'classroomReservation';
@@ -26,16 +27,19 @@ async function getReservationRoom(salle, date) {
                 $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
             },
         };
+        console.log(query);
 
         const reservations = await collection.find(query).toArray();
+        console.log(reservations);
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
-        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
         // Construire le tableau de disponibilités
         const availabilityTable = [];
-        const startTime = moment('2023-06-02T08:00:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
-        const endTime = moment('2023-06-02T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const day = moment(date).startOf('day').format('YYYY-MM-DD');
+        const startTime = moment(day + 'T08:00:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const endTime = moment(day + 'T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
         const timeSlotDuration = 30; // Durée du créneau en minutes
 
         let currentTime = startTime;
@@ -50,6 +54,7 @@ async function getReservationRoom(salle, date) {
             availabilityTable.push(timeSlot);
             currentTime = nextTime;
         }
+        console.log(availabilityTable);
 
         // Renvoyer le tableau de disponibilités
         return availabilityTable;
@@ -83,7 +88,7 @@ async function getReservationHour(salle, date, heure) {
         const reservations = await collection.find(query).toArray();
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
-        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
         // Construire le tableau de disponibilités
         const availabilityTable = [];
@@ -137,7 +142,7 @@ async function getReservationTime(salle, date, duree) {
         const reservations = await collection.find(query).toArray();
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
-        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
         // Construire le tableau de disponibilités pour la durée spécifiée
         const availabilityTable = [];
@@ -203,7 +208,7 @@ async function getReservationHourTime(salle, date, heure, duree) {
         const reservations = await collection.find(query).toArray();
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
-        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
         // Construire le tableau de disponibilités pour la durée spécifiée
         const availabilityTable = [];
@@ -276,7 +281,7 @@ async function getReservationHourTimeforcheck(salle, date, heure, duree) {
         const reservations = await collection.find(query).toArray();
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
-        const availableTimeSlots = calculateAvailableTimeSlots(reservations);
+        const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
         // Construire le tableau de disponibilités
         const availabilityTable = [];
@@ -368,12 +373,49 @@ async function getReservationRoomSecond(salle, date) {
 }
 
 
+async function getReservationUser(user) {
+    const client = new MongoClient(process.env.MONGO_URL);
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection('reservation');
+        const query = { Utilisateur: user };
+        const reservations = await collection.find(query).toArray();
+
+        // Formater les dates avec Moment.js
+        const formattedReservations = reservations.map(reservation => {
+            const duration = moment.duration(moment(reservation['heure fin'], 'YYYYMMDD HH:mm:ss').diff(moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss')));
+            const hours = Math.floor(duration.asHours());
+            const minutes = duration.minutes();
+            const formattedDuration = minutes > 0 ? `${hours}h${minutes}m` : `${hours}h`;
+            const formattedStartDate = moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').format('DD-MM-YYYY HH[h]mm');
+
+            return {
+                Salle: reservation.Salle,
+                'heure début': formattedStartDate,
+                Durée: formattedDuration
+            };
+        });
+
+        // Renvoyer le tableau de disponibilités formaté
+        return formattedReservations;
+    } finally {
+        await client.close();
+    }
+}
+
+
+
+
 
 // Création d'une fonction pour calculer les plages de créneaux de 30 minutes disponibles
-function calculateAvailableTimeSlots(reservations) {
+function calculateAvailableTimeSlots(reservations, date) {
     const availableTimeSlots = [];
-    const startTime = '20230602 08:00:00';
-    const endTime = '20230602 23:00:00';
+    const day = moment(date).startOf('day').format('YYYYMMDD');
+    console.log(day);
+    const startTime = day + ' 08:00:00';
+    console.log(startTime);
+    const endTime = day + ' 23:00:00';
     const timeSlotDuration = 30; // Durée du créneau en minutes
 
     // Convertir l'heure de début et de fin en objets Date
@@ -489,4 +531,11 @@ function formatTime(time) {
 //     // ...
 // }).catch(console.error);
 
-module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond };
+// Appeler la fonction principale
+// getReservationUser('toto').then((reservations) => {
+//     // Afficher le tableau de disponibilités
+//     console.log(reservations);
+//     // ...
+// }).catch(console.error);
+
+module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser };
