@@ -27,10 +27,8 @@ async function getReservationRoom(salle, date) {
                 $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
             },
         };
-        console.log(query);
 
         const reservations = await collection.find(query).toArray();
-        console.log(reservations);
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
         const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
@@ -54,7 +52,6 @@ async function getReservationRoom(salle, date) {
             availabilityTable.push(timeSlot);
             currentTime = nextTime;
         }
-        console.log(availabilityTable);
 
         // Renvoyer le tableau de disponibilités
         return availabilityTable;
@@ -84,18 +81,23 @@ async function getReservationHour(salle, date, heure) {
                 $lt: moment(date).endOf('day').format('YYYYMMDD HH:mm:ss')
             },
         };
+        console.log(query);
 
         const reservations = await collection.find(query).toArray();
+        console.log(reservations);
 
         // Appeler la fonction pour calculer les plages de créneaux disponibles
         const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
+        console.log(availableTimeSlots);
 
         // Construire le tableau de disponibilités
         const availabilityTable = [];
+        const day = moment(date).startOf('day').format('YYYY-MM-DD');
 
-        const startTime = moment('2023-06-02T' + heure + ':00', 'YYYY-MM-DDTHH:mm:ss').toDate();
-        const endTime = moment('2023-06-02T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const startTime = moment(day + 'T' + heure + ':00', 'YYYY-MM-DDTHH:mm:ss').toDate();
+        const endTime = moment(day + 'T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
         const timeSlotDuration = 30; // Durée du créneau en minutes
+        console.log(startTime);
 
         let currentTime = startTime;
 
@@ -412,9 +414,7 @@ async function getReservationUser(user) {
 function calculateAvailableTimeSlots(reservations, date) {
     const availableTimeSlots = [];
     const day = moment(date).startOf('day').format('YYYYMMDD');
-    console.log(day);
     const startTime = day + ' 08:00:00';
-    console.log(startTime);
     const endTime = day + ' 23:00:00';
     const timeSlotDuration = 30; // Durée du créneau en minutes
 
@@ -422,58 +422,67 @@ function calculateAvailableTimeSlots(reservations, date) {
     const startDateTime = moment(startTime, 'YYYYMMDD HH:mm:ss').toDate();
     const endDateTime = moment(endTime, 'YYYYMMDD HH:mm:ss').toDate();
 
-    // Parcourir les réservations
-    for (let i = 0; i < reservations.length; i++) {
-        const reservation = reservations[i];
+    if (reservations.length === 0) {
+        // Aucune réservation, ajouter un créneau disponible couvrant toute la journée
+        const availableSlot = {
+            start: startDateTime,
+            end: endDateTime,
+            available: true,
+        };
+        availableTimeSlots.push(availableSlot);
+    } else {
+        // Il y a des réservations, calculer les créneaux disponibles
+        for (let i = 0; i < reservations.length; i++) {
+            const reservation = reservations[i];
 
-        // Convertir l'heure de début et de fin de la réservation en objets Date
-        const reservationStart = moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').toDate();
-        const reservationEnd = moment(reservation['heure fin'], 'YYYYMMDD HH:mm:ss').toDate();
+            // Convertir l'heure de début et de fin de la réservation en objets Date
+            const reservationStart = moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').toDate();
+            const reservationEnd = moment(reservation['heure fin'], 'YYYYMMDD HH:mm:ss').toDate();
 
-        // Vérifier s'il y a un espace disponible avant la première réservation
-        if (i === 0 && reservationStart > startDateTime) {
-            const availableSlot = {
-                start: startDateTime,
-                end: reservationStart,
-                available: true,
-            };
-            availableTimeSlots.push(availableSlot);
-        }
+            // Vérifier s'il y a un espace disponible avant la première réservation
+            if (i === 0 && reservationStart > startDateTime) {
+                const availableSlot = {
+                    start: startDateTime,
+                    end: reservationStart,
+                    available: true,
+                };
+                availableTimeSlots.push(availableSlot);
+            }
 
-        // Vérifier s'il y a un espace disponible entre les réservations
-        if (i < reservations.length - 1) {
-            const nextReservationStart = moment(reservations[i + 1]['heure debut'], 'YYYYMMDD HH:mm:ss').toDate();
-            if (reservationEnd < nextReservationStart) {
+            // Vérifier s'il y a un espace disponible entre les réservations
+            if (i < reservations.length - 1) {
+                const nextReservationStart = moment(reservations[i + 1]['heure debut'], 'YYYYMMDD HH:mm:ss').toDate();
+                if (reservationEnd < nextReservationStart) {
+                    const availableSlot = {
+                        start: reservationEnd,
+                        end: nextReservationStart,
+                        available: true,
+                    };
+                    availableTimeSlots.push(availableSlot);
+                }
+            }
+
+            // Vérifier s'il y a un espace disponible après la dernière réservation
+            if (i === reservations.length - 1 && reservationEnd < endDateTime) {
                 const availableSlot = {
                     start: reservationEnd,
-                    end: nextReservationStart,
+                    end: endDateTime,
                     available: true,
                 };
                 availableTimeSlots.push(availableSlot);
             }
         }
-
-        // Vérifier s'il y a un espace disponible après la dernière réservation
-        if (i === reservations.length - 1 && reservationEnd < endDateTime) {
-            const availableSlot = {
-                start: reservationEnd,
-                end: endDateTime,
-                available: true,
-            };
-            availableTimeSlots.push(availableSlot);
-        }
     }
 
     // Filtrer les créneaux disponibles pour inclure uniquement les créneaux de 30 minutes
-    const availableTimeSlotsFiltered = availableTimeSlots.filter(
-        (slot) => {
-            const slotDuration = moment(slot.end).diff(slot.start, 'minutes');
-            return slotDuration >= timeSlotDuration;
-        }
-    );
+    const availableTimeSlotsFiltered = availableTimeSlots.filter((slot) => {
+        const slotDuration = moment(slot.end).diff(slot.start, 'minutes');
+        return slotDuration >= timeSlotDuration;
+    });
 
     return availableTimeSlotsFiltered;
 }
+
 
 
 // Vérifier si un créneau de temps donné est disponible
