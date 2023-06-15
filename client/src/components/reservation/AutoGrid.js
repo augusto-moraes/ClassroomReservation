@@ -44,7 +44,7 @@ export default function AutoGrid() {
     setSelectedDate(value);
   };
 
-  //fonction qui crée la requête
+  //fonction qui crée la requête à partir du filtre
   function queryBuilding(salle, date, heure, duree) {
 
     console.log('requête construite');
@@ -65,7 +65,9 @@ export default function AutoGrid() {
       .then(response => response.json())
       .then(data => {
         // Traitement les données de réservation de salle ici : affichage des salles
-        console.log(data);
+        const times = data.map(item => item.time);
+        console.log(times);
+        //exporter times et l'importer dans Reservation page....
       })
 
       .catch(error => {

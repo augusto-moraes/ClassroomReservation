@@ -9,7 +9,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
     // States
 
     // Const
-    const hours = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00'];
+    const hours = ['8h', '8h30', '9h', '9h30', '10h', '10h30', '11h', '11h30', '12h'];
     const duree = ['1h', '2h']
 
     // Functions
