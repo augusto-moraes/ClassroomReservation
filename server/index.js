@@ -1,8 +1,9 @@
 //import { getReservationRoom } from './checkReservation';
 
 const express = require("express");
-const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond } = require('./checkReservation');
-const { addResa } = require ('./addReservations');
+const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser } = require('./checkReservation');
+const { addResa } = require('./addReservations');
+const { deleteResa } = require('./deleteReservation');
 
 const PORT = process.env.PORT || 3001;
 
@@ -38,10 +39,10 @@ app.get('/getReservationHour', async (req, res) => {
     try {
         const salle = req.query.salle;
         const date = req.query.date;
+        const heure = req.query.heure;
 
-        const hours = await getReservationHour(salle, date);
-
-        res.send('Réservation d\'heure : ' + hours.join(', '));
+        const hours = await getReservationHour(salle, date, heure);
+        res.json(hours);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure');
     }
@@ -54,8 +55,7 @@ app.get('/getReservationHourTime', async (req, res) => {
         const heure = req.query.heure;
 
         const hourTime = await getReservationHourTime(salle, date, heure);
-
-        res.send('Réservation d\'heure spécifique : ' + JSON.stringify(hourTime));
+        res.json(hourTime);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure spécifique');
     }
@@ -69,9 +69,7 @@ app.get('/getReservationTime', async (req, res) => {
         const fin = req.query.fin;
 
         const timeSlots = await getReservationTime(salle, date, debut, fin);
-
-
-        res.send('Réservation dans la plage horaire : ' + JSON.stringify(timeSlots));
+        res.json(timeSlots);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation dans la plage horaire');
     }
@@ -104,6 +102,19 @@ app.get('/getReservationRoomSecond', async (req, res) => {
     }
 });
 
+app.get('/getReservationUser', async (req, res) => {
+    const user = req.query.user;
+
+    try {
+        const reservations = await getReservationUser(user);
+        res.status(200).json(reservations);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while fetching the reservations.');
+    }
+});
+
+
 //requete pour post une nouvelle reservation
 app.post('/addResa', async (req, res) => {
     const { salle, cours, heureDebut, heureFin, user, participants, nb, portee } = req.body;
@@ -116,3 +127,18 @@ app.post('/addResa', async (req, res) => {
         res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
     }
 });
+
+app.delete('/deleteReservation', async (req, res) => {
+    const salle = req.query.salle;
+    const heureDebut = req.query.heureDebut;
+    const heureFin = req.query.heureFin;
+
+    try {
+        await deleteResa(salle, heureDebut, heureFin);
+        res.status(200).send('Reservation deleted successfully.');
+    } catch (error) {
+        console.error(error);
+        res.status(404).send('An error occurred while deleting the reservation.');
+    }
+});
+
