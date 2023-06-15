@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Button from '@mui/material/Button';
 
 export default function ExampleMUI() {
 
@@ -12,8 +13,9 @@ export default function ExampleMUI() {
       .then((data) => setData(data.message));
   }, []);
 
-
   return (
-    <p>This is data : {data}</p>
+    <div>
+      <Button variant="contained">{!data ? "Loading..." : data}</Button>
+    </div>
   );
 }
