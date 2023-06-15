@@ -10,6 +10,7 @@ import NavBar from "./components/common/NavBar";
 import ExampleMUI from "./components/Example/ExampleMUI";
 import ReservationPage from "./components/reservation/ReservationPage";
 import Footer from "./components/common/Footer";
+import MyReservations from "./components/myReservations/myReservations";
 
 export default function Root() {
   return (
@@ -20,6 +21,7 @@ export default function Root() {
                 <Route path="/" element={<Home />}/>
                 <Route path="/reservation" element={<ReservationPage />} />
                 <Route path="/schedule" element={<UserApp />} />
+                <Route path="/myreservations" element={<MyReservations />} />
             </Routes>
         </div>
         <Footer />
