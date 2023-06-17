@@ -11,12 +11,8 @@ export default function FiltresRecherche() {
     // Functions
 
   return (
-
     <div style={{ margin: 30 }}>
-          <AutoGrid></AutoGrid>
+      <AutoGrid></AutoGrid>
     </div>
-
-
-
   );
 }

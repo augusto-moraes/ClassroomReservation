@@ -15,17 +15,14 @@ export default function ReservationPage() {
 
   return (
     <div>
-
         <div>
           <FiltresRecherche />
         </div>
-
         <div>   
           {salles.map((salle) => (
             <Salle salle={salle}/>
           ))}
         </div>
-
     </div>
 
   );
