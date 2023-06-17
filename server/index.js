@@ -43,6 +43,8 @@ app.get('/getReservationHour', async (req, res) => {
 
         const hours = await getReservationHour(salle, date, heure);
         res.json(hours);
+        
+        console.log(hours);
     } catch (error) {
         res.status(500).send('Une erreur est survenue lors de la récupération de la réservation d\'heure');
     }

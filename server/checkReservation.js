@@ -99,15 +99,15 @@ async function getReservationHour(salle, date, heure) {
 
         let currentTime = startTime;
 
-        while (currentTime <= endTime) {
-            const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
-            const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
-            const timeSlot = {
-                time: formatTime(currentTime),
-                available: isAvailable ? 'oui' : 'non',
-            };
-            availabilityTable.push(timeSlot);
-            currentTime = nextTime;
+        while (currentTime < endTime) {
+          const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+          const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
+          const timeSlot = {
+            time: formatTime(currentTime),
+            available: isAvailable ? 'oui' : 'non',
+          };
+          availabilityTable.push(timeSlot);
+          currentTime = nextTime;
         }
 
         // Renvoyer le tableau de disponibilités

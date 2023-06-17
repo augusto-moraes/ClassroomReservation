@@ -3,7 +3,7 @@ import AutoGrid from './AutoGrid';
 import {useState} from 'react';
 
 
-export default function FiltresRecherche({setReservationTimes}) {
+export default function FiltresRecherche({setTimes}) {
 
     // States
 
@@ -14,7 +14,7 @@ export default function FiltresRecherche({setReservationTimes}) {
   return (
 
     <div style={{ margin: 30 }}>
-          <AutoGrid setReservationTimes={setReservationTimes}/>
+          <AutoGrid setTimes = {setTimes}/>
     </div>
 
 
