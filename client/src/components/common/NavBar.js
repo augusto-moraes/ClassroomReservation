@@ -11,7 +11,6 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom';
 
 const pages = [
@@ -28,12 +27,12 @@ const pages = [
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [user, setData] = React.useState(null);
+  const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
     fetch("/api")
       .then((res) => res.json())
-      .then((data) => setData(data.message));
+      .then((user) => setUser(user.message));
   }, []);
 
   const handleOpenNavMenu = (event) => {
@@ -108,8 +107,8 @@ function NavBar() {
               }}
             >
               {pages.map(({page, href}) => (
-                <MenuItem key={page} href={href} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page} component={Link} to={href} onClick={handleCloseNavMenu}>
+                  {page}
                 </MenuItem>
               ))}
             </Menu>
