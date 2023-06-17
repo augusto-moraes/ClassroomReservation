@@ -28,6 +28,37 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
       setSelectedDuree(value);
     };
 
+    const handleClick = () => {
+      const reservationData = {
+        salle: "TD 1",
+        cours: 'LALALA',
+        heureDebut: '20230529 16:00:00',
+        heureFin: '20230529 18:00:00',
+        utilisateur: 'toto',
+        participants: ['arthur', 'bastien'],
+        nombrePersonne: 3,
+        porte: 'INSA'
+      };
+    
+      fetch('/addResa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservationData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Gérer la réponse du serveur ici
+          console.log('Réservation ajoutée:', data);
+        })
+        .catch(error => {
+          // Gérer les erreurs ici
+          console.error('Erreur lors de la réservation:', error);
+        });
+    };
+    
+
   return (
 
     <div style={{display: "flex", alignItems: "center", justifyContent: "center"}} >
@@ -39,7 +70,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
         <ColorToggleButton  onChange={handleHeureChange} title='heure' items={hours}></ColorToggleButton>
         <ColorToggleButton  onChange={handleDureeChange} title='durée' items={duree}></ColorToggleButton>
         <div style={{textAlign: "right"}}>
-        <Button variant="contained" size='small' endIcon={<SendIcon />} > Valider la réservation </Button>
+        <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick}> Valider la réservation </Button>
         </div>
         </div>
       </Card>
