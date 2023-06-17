@@ -2,7 +2,7 @@ import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-export default function ColorToggleButton({items=['rien'], title='titre', onChange}) {
+export default function ColorToggleButton({items=['rien'], title='titre', onChange, disabled=false, disabledItems=[]}) {
   const [selection, setSelection] = React.useState('');
 
   function handleChange(event) {
@@ -21,9 +21,11 @@ export default function ColorToggleButton({items=['rien'], title='titre', onChan
       exclusive
       onChange={handleChange}
       aria-label="Platform"
+      disabled={disabled}
+      size={'small'}
     >
         {items.map((item) => (
-          <ToggleButton value={item}>{item}</ToggleButton>
+          <ToggleButton value={item} disabled={disabledItems.indexOf(item) > -1}>{item}</ToggleButton>
         ))}
     </ToggleButtonGroup>
     </div>
