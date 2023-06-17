@@ -4,10 +4,13 @@ const express = require("express");
 const { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser } = require('./checkReservation');
 const { addResa } = require('./addReservations');
 const { deleteResa } = require('./deleteReservation');
+const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+app.use(bodyParser.json());
+app.use(express.json()); //express.json()
 
 
 app.get("/api", (req, res) => {
@@ -108,6 +111,7 @@ app.get('/getReservationUser', async (req, res) => {
     try {
         const reservations = await getReservationUser(user);
         res.status(200).json(reservations);
+        logreq.body.salle
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching the reservations.');
@@ -117,16 +121,19 @@ app.get('/getReservationUser', async (req, res) => {
 
 //requete pour post une nouvelle reservation
 app.post('/addResa', async (req, res) => {
-    const { salle, cours, heureDebut, heureFin, user, participants, nb, portee } = req.body;
+    const { salle, cours, heureDebut, heureFin, utilisateur, participants, nombrePersonne, porte } = req.body;
+
+    console.log("le body :", salle, cours, heureDebut, heureFin, utilisateur, participants, nombrePersonne, porte);
 
     try {
-        const add = await addResa(salle, cours, heureDebut, heureFin, user, participants, nb, portee);
+        const add = await addResa(salle, cours, heureDebut, heureFin, utilisateur, participants, nombrePersonne, porte);
         res.json(add);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
     }
 });
+
 
 app.delete('/deleteReservation', async (req, res) => {
     const salle = req.query.salle;
