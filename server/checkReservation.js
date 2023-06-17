@@ -87,7 +87,6 @@ async function getReservationHour(salle, date, heure) {
         // Appeler la fonction pour calculer les plages de créneaux disponibles
         const availableTimeSlots = calculateAvailableTimeSlots(reservations, date);
 
-
         // Construire le tableau de disponibilités
         const availabilityTable = [];
         const day = moment(date).startOf('day').format('YYYY-MM-DD');
@@ -96,27 +95,39 @@ async function getReservationHour(salle, date, heure) {
         const endTime = moment(day + 'T22:30:00', 'YYYY-MM-DDTHH:mm:ss').toDate();
         const timeSlotDuration = 30; // Durée du créneau en minutes
 
-
         let currentTime = startTime;
 
         while (currentTime <= endTime) {
-            const nextTime = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
-            const isAvailable = isTimeSlotAvailable(currentTime, nextTime, availableTimeSlots);
-            const timeSlot = {
-                time: formatTime(currentTime),
-                available: isAvailable ? 'oui' : 'non',
-            };
-            availabilityTable.push(timeSlot);
-            currentTime = nextTime;
+            const timeSlotEnd = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+
+            if (timeSlotEnd > endTime) {
+                break;
+            }
+
+            const isAvailable = isTimeSlotAvailable(currentTime, timeSlotEnd, availableTimeSlots);
+
+            if (isAvailable) {
+                const timeSlot = {
+                    time: formatTime(currentTime),
+                    available: 'oui'
+                };
+                availabilityTable.push(timeSlot);
+            }
+
+            currentTime = timeSlotEnd;
         }
 
+        // Filtrer les créneaux disponibles avec available = "oui"
+        const availableSlots = availabilityTable.filter(slot => slot.available === 'oui');
+
         // Renvoyer le tableau de disponibilités
-        return availabilityTable;
+        return availableSlots;
     } finally {
         // Fermeture de la connexion à la base de données
         await client.close();
     }
 }
+
 
 async function getReservationTime(salle, date, duree) {
     // Connexion à la base de données
