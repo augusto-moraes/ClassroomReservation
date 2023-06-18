@@ -56,7 +56,6 @@ export default function AutoGrid({ setTimes, complet }) {
     setSelectedSalle('');
     setSelectedHeure('');
     setSelectedDuree('');
-    setSelectedDate(null);
     setFilterKey((prevKey) => prevKey + 1); // Force la mise à jour des filtres
   };
 
