@@ -405,10 +405,7 @@ async function getReservationUser(user) {
             const [hour, minute] = time.split('h');
 
             const formattedDate = `${day}-${month}-${year}`;
-            const formattedStartTime = `${hour}h${minute}`;
-
-            console.log(formattedDate); // Résultat : DD-MM-YYYY
-            console.log(formattedStartTime); // Résultat : HH[h]mm
+            const formattedStartTime = parseInt(hour, 10).toString() + 'h' + minute;
 
             return {
                 Salle: reservation.Salle,
@@ -424,6 +421,7 @@ async function getReservationUser(user) {
         await client.close();
     }
 }
+
 
 
 
