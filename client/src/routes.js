@@ -24,7 +24,6 @@ export default function Root() {
                 <Route path="/myreservations" element={<MyReservations />} />
             </Routes>
         </div>
-        <Footer />
     </div>
   );
 }

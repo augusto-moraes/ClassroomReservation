@@ -100,24 +100,24 @@ async function getReservationHour(salle, date, heure) {
 
         let currentTime = startTime;
 
-        while (currentTime <= endTime) {
-            const timeSlotEnd = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
+        while (currentTime < endTime) {
+          const timeSlotEnd = moment(currentTime).add(timeSlotDuration, 'minutes').toDate();
 
             if (timeSlotEnd > endTime) {
                 break;
             }
 
-            const isAvailable = isTimeSlotAvailable(currentTime, timeSlotEnd, availableTimeSlots);
+          const isAvailable = isTimeSlotAvailable(currentTime, timeSlotEnd, availableTimeSlots);
 
             if (isAvailable) {
-                const timeSlot = {
-                    time: formatTime(currentTime),
-                    available: 'oui'
-                };
-                availabilityTable.push(timeSlot);
+              const timeSlot = {
+                time: formatTime(currentTime),
+                available: 'oui'
+              };
+              availabilityTable.push(timeSlot);
             }
 
-            currentTime = timeSlotEnd;
+          currentTime = timeSlotEnd;
         }
         // Filtrer les créneaux disponibles avec available = "oui"
         const availableSlots = availabilityTable.filter(slot => slot.available === 'oui');
@@ -529,12 +529,12 @@ function formatTime(time) {
     return moment(time).format('HH[h]mm');
 }
 
-// // Appeler la fonction principale
-// getReservationRoom('TD D', '2023-06-02').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
+// Appeler la fonction principale
+getReservationHour('TD C', '2023-06-08', '09:00').then((availabilityTable) => {
+    // Afficher le tableau de disponibilités
+    console.log(availabilityTable);
+    // ...
+}).catch(console.error);
 
 // getReservationTime('TD D', '2023-06-02', '01:00').then((availabilityTable) => {
 //     // Afficher le tableau de disponibilités

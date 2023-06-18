@@ -1,0 +1,15 @@
+// SelectedDureeContext.js
+
+import React from 'react';
+
+const SelectedDureeContext = React.createContext('');
+
+export default function SelectedDureeProvider({ children }) {
+  const [selectedDuree, setSelectedDuree] = React.useState('');
+
+  return (
+    <SelectedDureeContext.Provider value={{ selectedDuree, setSelectedDuree }}>
+      {children}
+    </SelectedDureeContext.Provider>
+  );
+}

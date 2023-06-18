@@ -5,21 +5,28 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function BasicSelect({options = ['nothing here'], placeholder=''}) {
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+export default function BasicSelect({options = ['nothing here'], placeholder='', onChange}) {
+  const [selection, setSelection] = React.useState('');
+  
+  function handleChange(event) {
+    setSelection(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
+  }
 
   return (
+    <div style={{marginTop:8}}>
     <Box sx={{ minWidth: 120 }}>
+
       <FormControl fullWidth>
+
         <InputLabel id="demo-simple-select-label">{placeholder}</InputLabel>
+
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={age}
+          value={selection}
           label={placeholder}
           onChange={handleChange}
         >
@@ -29,5 +36,8 @@ export default function BasicSelect({options = ['nothing here'], placeholder=''}
         </Select>
       </FormControl>
     </Box>
+    </div>
   );
+  
 }
+
