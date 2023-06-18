@@ -1,37 +1,52 @@
 require('dotenv').config();
-const { MongoClient, Collection } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const client = new MongoClient(process.env.MONGO_URL);
 
 // Sélection de la base et la collection
 const db = client.db('classroomReservation');
 const collection = db.collection('reservation');
 
-async function addResa(salle, cours, heureDebut, heureFin, user, participants, nb, portee) {
-    try {
 
+
+async function addResa(salle, cours, heureDebut, heureFin, utilisateur, participants, nombrePersonne, porte) {
+    try {
         await client.connect();
 
-        console.log('connection OK !');
+        const reservation = {
+            Salle: salle,
+            Cours: cours,
+            'heure debut': heureDebut,
+            'heure fin': heureFin
+        };
 
-        const insertData = await collection.insertMany([
-            {
-                Salle: salle,
-                Cours: cours,
-                'heure debut': heureDebut,
-                'heure fin': heureFin,
-                Utilisateur: user,
-                Participants: participants,
-                NombrePersonne: nb,
-                Porte: portee
-            }
-        ])
+        if (utilisateur) {
+            reservation.Utilisateur = utilisateur;
+        }
 
-        console.log('réservation ajoutée ! =>', insertData);
+        if (participants) {
+            reservation.Participants = participants;
+        }
 
-    } catch (e) { throw e; }
-    await client.close();
-    return 'done !'
+        if (nombrePersonne) {
+            reservation.NombrePersonne = nombrePersonne;
+        }
+
+        if (porte) {
+            reservation.Porte = porte;
+        }
+
+        const insertData = await collection.insertOne(reservation);
+        console.log(insertData);
+
+        console.log('Réservation ajoutée:', insertData.ops);
+        return 'done';
+    } catch (error) {
+        throw error;
+    } finally {
+        await client.close();
+    }
 }
+
 
 //appel de la fonction addResa
 // addResa('TD A', "LALALA", "20230529 16:00:00", "20230529 18:00:00", "toto", ['arthur', 'bastien'], 3, "INSA")

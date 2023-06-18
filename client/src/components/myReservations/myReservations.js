@@ -2,12 +2,13 @@ import * as React from 'react';
 import ButtonAppBar from '../reservation/AppBar';
 import Salle from './ElementSalleReservation';
 import FiltresRecherche from '../reservation/FiltresRecherche';
+import RecupDataReservation, { MesSallesReserve, MeshorairesReserve } from './recupDataReservation';
 
 
 
 export default function MyReservations() {
 
-  const sallesReserver = ['TD A', 'TD B', 'TD C'];
+  const sallesReserver = MesSallesReserve();
 
     // States
 
@@ -17,18 +18,7 @@ export default function MyReservations() {
 
   return (
     <div style={{backgroundColor:'#F7F7F7'}}>
-        <div>
-          <h1>Mes reservations</h1>
-        </div>
-
-        <div>   
-          {sallesReserver.map((salle) => (
-            <Salle salle={salle}/>
-          ))}
-        </div>
-
-    
-
+        <Salle/>
     </div>
 
   );
