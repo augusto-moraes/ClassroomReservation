@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ColorToggleButton from '../common/ToggleButtonGroup';
 
-export default function Salle({salle = 'TDX', heures, duration, desc = salle + ' est une salle incroyable !'}) {
+export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : '}) {
 
     // Const
     const hours = ['08:00', '08:30', '09:00', '09:30', 
@@ -76,8 +76,8 @@ export default function Salle({salle = 'TDX', heures, duration, desc = salle + '
       <h1>Salle {salle}</h1>
         <div style={{textAlign: "left"}}>
           <p>{desc}</p>
-          <ColorToggleButton  onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
-          <ColorToggleButton  onChange={handleDureeChange} title='Durée' items={duree} />
+          <ColorToggleButton  key={'key1'} onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
+          <ColorToggleButton  key={'key2'} onChange={handleDureeChange} title='Durée' items={duree} />
           <div style={{textAlign: "right"}}>
             <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick}> Valider la réservation </Button>
           </div>

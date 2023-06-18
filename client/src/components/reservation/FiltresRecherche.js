@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AutoGrid from './AutoGrid';
 
-export default function FiltresRecherche({setTimes, comp}) {
+export default function FiltresRecherche({setTimes}) {
 
     // States
 
@@ -11,7 +11,7 @@ export default function FiltresRecherche({setTimes, comp}) {
 
   return (
     <div style={{ margin: '50px' }}>
-          <AutoGrid setTimes={setTimes} complet={comp}/>
+          <AutoGrid setTimes={setTimes}/>
     </div>
   );
 }
