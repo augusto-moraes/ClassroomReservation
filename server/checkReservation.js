@@ -511,12 +511,12 @@ function formatTime(time) {
     return moment(time).format('HH[h]mm');
 }
 
-// // Appeler la fonction principale
-// getReservationRoom('TD D', '2023-06-02').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
+// Appeler la fonction principale
+getReservationHour('TD C', '2023-06-08', '09:00').then((availabilityTable) => {
+    // Afficher le tableau de disponibilités
+    console.log(availabilityTable);
+    // ...
+}).catch(console.error);
 
 // getReservationTime('TD D', '2023-06-02', '01:00').then((availabilityTable) => {
 //     // Afficher le tableau de disponibilités
