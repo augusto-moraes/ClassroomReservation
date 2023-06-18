@@ -13,6 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
+import moment from 'moment';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -31,10 +32,14 @@ export default function AutoGrid({ setTimes, complet }) {
   const [selectedSalle, setSelectedSalle] = React.useState('');
   const [selectedHeure, setSelectedHeure] = React.useState('');
   const [selectedDuree, setSelectedDuree] = React.useState('');
-  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = React.useState(moment());
 
   //pour le pop-up d'erreur qunad la date n'est pas selected
   const [showErrorDialog, setShowErrorDialog] = React.useState(false);
+
+  React.useEffect(() => {
+    handleValidation();
+  });
 
   const openErrorDialog = () => {
     setShowErrorDialog(true);

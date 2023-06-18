@@ -22,9 +22,14 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import moment from 'moment';
 
 export default function BasicDatePicker({ onDateChange }) {
   const [selectedDate, setSelectedDate] = React.useState(null);
+
+  React.useEffect(() => {
+    setSelectedDate(moment());
+  });
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -39,7 +44,7 @@ export default function BasicDatePicker({ onDateChange }) {
         <DatePicker 
           label="Date" 
           value={selectedDate} 
-          onChange={handleDateChange} 
+          onChange={handleDateChange}
         />
       </DemoContainer>
     </LocalizationProvider>

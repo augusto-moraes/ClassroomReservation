@@ -25,7 +25,7 @@ export default function ReservationPage(salle, h, complet =1) {
 
           <div>   
             {times.length === 0 ? (
-              <p> Lancer une recherche</p>
+              <p>Loading...</p>
             ) : (
               salles.map((salle, index) => (
               <Salle key={salle} salle={salle} heures={times[index]} duration={dureeResa}/>
@@ -33,7 +33,6 @@ export default function ReservationPage(salle, h, complet =1) {
           </div>
 
       </div>
-
     );
   } else {
     return (
