@@ -113,7 +113,7 @@ app.get('/getReservationUser', async (req, res) => {
     try {
         const reservations = await getReservationUser(user);
         res.status(200).json(reservations);
-        logreq.body.salle
+        req.body.salle
     } catch (error) {
         console.error(error);
         res.status(500).send('An error occurred while fetching the reservations.');
