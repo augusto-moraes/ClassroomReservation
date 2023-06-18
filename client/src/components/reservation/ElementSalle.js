@@ -6,8 +6,6 @@ import ColorToggleButton from '../common/ToggleButtonGroup';
 
 export default function Salle({salle = 'TDX', desc = salle + ' est une salle incroyable !'}) {
 
-    // States
-
     // Const
     const hours = ['08:00', '08:30', '09:00', '09:30', 
                     '10:00', '10:30', '11:00', '11:30', '12:00',
@@ -42,7 +40,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est une salle inc
 
     const handleClick = () => {
       const reservationData = {
-        salle: "TD 1",
+        salle: salle,
         cours: 'LALALA',
         heureDebut: '20230529 16:00:00',
         heureFin: '20230529 18:00:00',
