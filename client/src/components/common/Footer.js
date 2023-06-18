@@ -4,7 +4,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export default function Footer() {
     return (
-      <Box style={{textAlign:'center'}}>
+      <Box style={{backgroundColor:'#F7F7F7', textAlign:'center'}}>
         <p>
             a wonderful footer made with the <FavoriteIcon/> 
         </p>
