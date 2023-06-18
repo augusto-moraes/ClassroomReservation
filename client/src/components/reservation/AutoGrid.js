@@ -118,60 +118,31 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
 
     let apiUrls;
 
-    if (selectedSalle==='') {
+    apiUrls = salles.map((salle) =>
+      queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
+    );
 
-      complet = 1;
+    console.log(apiUrls);
 
-      if (selectedDuree==='' && selectedHeure !=='') {
-        apiUrls = salles.map((salle) =>
-          queryBuildingWithHour(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure)
-        );
-      } else if (selectedDuree==='' && selectedHeure==='') {
-        apiUrls = salles.map((salle) =>
-          queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
-        );
-      } else {
-        apiUrls = salles.map((salle) =>
-          queryBuildingWithHourAndDuration(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure, selectedDuree)
-        );    
-      }
-
-      console.log(apiUrls);
+    const fetchPromises = apiUrls.map((apiUrl) => fetch(apiUrl).then((response) => response.json()));
   
-      const fetchPromises = apiUrls.map((apiUrl) => fetch(apiUrl).then((response) => response.json()));
-    
-      Promise.all(fetchPromises)
-        .then((dataArray) => {
-          const times = dataArray
-            .map((data) => data.map((item) => item.time))
-            .filter((time) => time.length > 0);
-          console.log(times);
-          setTimes(times);
-        })
-        .catch((error) => {
-          console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
-        });
+    Promise.all(fetchPromises)
+      .then((dataArray) => {
+        const times = dataArray
+          .map((data) => {
+            console.log(data);
+            data.map((item) => item.time)
+          })
+          .filter((time) => time.length > 0);
+          
+        console.log(times);
+        setTimes(times);
+      })
+      .catch((error) => {
+        console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
+      });
 
-    } else {//si on a mis une salle en filtre
-
-      complet = 0;
-
-      apiUrls = queryBuilding(selectedSalle, selectedDate && selectedDate.format("YYYY-MM-DD"))
-
-      console.log(apiUrls);
-  
-      fetch(apiUrls)
-        .then(response => response.json())
-        .then(data => {
-          const times = data.map(item => item.time);
-          console.log(times);
-        })
-        .catch((error) => {
-          console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
-        });
-    }
-
-  };
+  } 
   
 
   return (
