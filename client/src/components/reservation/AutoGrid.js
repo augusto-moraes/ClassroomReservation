@@ -174,6 +174,7 @@ export default function AutoGrid({ setTimes, complet }) {
   
 
   return (
+    <div style={{marginLeft:50, marginRight:50}}>
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={6}>
       <Grid item xs>
@@ -190,7 +191,7 @@ export default function AutoGrid({ setTimes, complet }) {
         </Grid>
         <Grid item xs>
           <Item>
-            <Button size='small' endIcon={<SendIcon />} onClick = {handleValidation}>  Valider </Button>
+            <Button size='small' endIcon={<SendIcon />} onClick={handleValidation}>  Valider </Button>
             <div style={{marginBottom:4}}>
             <Button size='small' endIcon={<RefreshIcon/>} onClick={handleReset} > Réinitialiser </Button>
             </div>
@@ -212,5 +213,6 @@ export default function AutoGrid({ setTimes, complet }) {
       </Dialog>
 
     </Box>
+    </div>
   );
 }

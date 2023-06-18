@@ -10,12 +10,8 @@ export default function FiltresRecherche({setTimes, comp}) {
     // Functions
 
   return (
-
     <div style={{ margin: 30 }}>
-          <AutoGrid setTimes = {setTimes} complet={comp}/>
+          <AutoGrid setTimes={setTimes} complet={comp}/>
     </div>
-
-
-
   );
 }
