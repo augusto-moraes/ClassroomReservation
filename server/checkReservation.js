@@ -53,7 +53,7 @@ async function getReservationRoom(salle, date) {
             currentTime = nextTime;
         }
 
-        // Filtrer les créneaux disponibles avec available = "oui"
+        // Filtrer les créneaux disponibles avec available = "non"
         const availableSlots = availabilityTable.filter(slot => slot.available === 'non');
 
         // Renvoyer le tableau de disponibilités
@@ -109,26 +109,25 @@ async function getReservationHour(salle, date, heure) {
 
             const isAvailable = isTimeSlotAvailable(currentTime, timeSlotEnd, availableTimeSlots);
 
-            if (isAvailable) {
+            if (!isAvailable) {
                 const timeSlot = {
                     time: formatTime(currentTime),
-                    available: 'oui'
+                    available: 'non'
                 };
                 availabilityTable.push(timeSlot);
             }
 
             currentTime = timeSlotEnd;
         }
-        // Filtrer les créneaux disponibles avec available = "oui"
-        const availableSlots = availabilityTable.filter(slot => slot.available === 'oui');
 
         // Renvoyer le tableau de disponibilités
-        return availableSlots;
+        return availabilityTable;
     } finally {
         // Fermeture de la connexion à la base de données
         await client.close();
     }
 }
+
 
 
 async function getReservationTime(salle, date, duree) {
@@ -528,50 +527,5 @@ function isTimeSlotAvailable(startTime, endTime, availableTimeSlots) {
 function formatTime(time) {
     return moment(time).format('HH[h]mm');
 }
-
-// // Appeler la fonction principale
-// getReservationRoom('TD D', '2023-06-02').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// getReservationTime('TD D', '2023-06-02', '01:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// getReservationTime('TD D', '2023-06-02', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// getReservationHourTime('TD D', '2023-06-02', '12:00', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// checkReservationHourTime('TD D', '2023-06-02', '08:00', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// Appeler la fonction principale
-// getReservationRoomSecond('TD D', '2023-06-02').then((reservationHours) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(reservationHours);
-//     // ...
-// }).catch(console.error);
-
-// Appeler la fonction principale
-// getReservationUser('toto').then((reservations) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(reservations);
-//     // ...
-// }).catch(console.error);
 
 module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser };
