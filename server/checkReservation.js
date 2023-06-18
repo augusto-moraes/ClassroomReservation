@@ -53,8 +53,11 @@ async function getReservationRoom(salle, date) {
             currentTime = nextTime;
         }
 
+        // Filtrer les créneaux disponibles avec available = "oui"
+        const availableSlots = availabilityTable.filter(slot => slot.available === 'non');
+
         // Renvoyer le tableau de disponibilités
-        return availabilityTable;
+        return availableSlots;
     } finally {
         // Fermeture de la connexion à la base de données
         await client.close();
