@@ -3,6 +3,7 @@ import { Card } from '@mui/material';
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ColorToggleButton from '../common/ToggleButtonGroup';
+import BasicTextFields from '../BasicTextFields';
 
 export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : ', date}) {
 
@@ -18,6 +19,7 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
     const [disabledHours, setDisabledHours] = React.useState(heures);
     const [selectedHeure, setSelectedHeure] = React.useState(null);
     const [selectedDuree, setSelectedDuree] = React.useState(null);
+    const [user, setUser] = React.useState(null);
 
     const [duree, setDuree] = React.useState(dureeTotale.slice(0, Math.min(hours.length, dureeTotale.length)));
 
@@ -66,7 +68,7 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
         cours: null,
         heureDebut: `${date.format('YYYYMMDD')} ${selectedHeure.replace('h',':')}:00`,
         heureFin: `${date.format('YYYYMMDD')} ${sumTime()}`,
-        utilisateur: 'user',
+        utilisateur: user,
         participants: [],
         nombrePersonne: 3,
         porte: 'Eleve'
@@ -99,6 +101,7 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
           <p>{desc}</p>
           <ColorToggleButton onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
           <ColorToggleButton onChange={handleDureeChange} title='Durée' items={duree} />
+          <BasicTextFields></BasicTextFields>
           <div style={{textAlign: "right"}}>
             <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick} disabled={selectedHeure === null || selectedDuree === null}> Valider la réservation </Button>
           </div>
