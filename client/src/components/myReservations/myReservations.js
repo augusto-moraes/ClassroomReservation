@@ -37,13 +37,20 @@ export default function MyReservations() {
     );
   }
 
+  
+
+  
+
   //MesSallesReserve(username);
 
   return (
     <div style={{backgroundColor:'#F7F7F7'}}>
-        
         <Salle user={username}/>
     </div>
 
   );
+  
+  
 }
+
+
