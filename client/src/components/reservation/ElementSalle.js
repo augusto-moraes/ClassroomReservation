@@ -16,8 +16,8 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
     const dureeTotale = [`30 min`, `01h00`, `01h30`, `02h00`, `02h30`, `03h00`, `03h30`, `04h00`];
 
     const [disabledHours, setDisabledHours] = React.useState(heures);
-    const [selectedHeure, setSelectedHeure] = React.useState('');
-    const [selectedDuree, setSelectedDuree] = React.useState('');
+    const [selectedHeure, setSelectedHeure] = React.useState(null);
+    const [selectedDuree, setSelectedDuree] = React.useState(null);
 
     const [duree, setDuree] = React.useState(dureeTotale.slice(0, Math.min(hours.length, dureeTotale.length)));
 
@@ -32,24 +32,44 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
     const handleHeureChange = (value) => {
       setSelectedHeure(value);
       setDuree(dureeTotale.slice(0, calculDuree(value)));
-
-      console.log(date);
     };
 
     const handleDureeChange = (value) => {
       setSelectedDuree(value);
     };
 
+    const sumTime = () => {
+      var heure = parseInt(selectedHeure.substring(0,3));
+      var min = 0;
+
+      // traitement des minutes
+      var minDuree = selectedDuree === '30 min' || parseInt(selectedDuree.substring(3,5)) > 0;
+      var minHeure = parseInt(selectedHeure.substring(3,5)) > 0;
+
+      if(minDuree && minHeure) heure+=1;
+      else if(minDuree || minHeure) min=30;
+      
+      // traitement des heures
+      if(selectedDuree !== '30 min') {
+        heure += parseInt(selectedDuree.substring(0,3));
+      }
+
+      const heureStr = heure < 10 ? `0${heure}` : `${heure}`;
+      const minStr = min === 30 ? `${min}` : `0${min}`;
+
+      return `${heureStr}:${minStr}:00`;
+    };
+
     const handleClick = () => {
       const reservationData = {
         salle: salle,
-        cours: 'LALALA',
-        heureDebut: '20230529 16:00:00',
-        heureFin: '20230529 18:00:00',
-        utilisateur: 'toto',
-        participants: ['arthur', 'bastien'],
+        cours: null,
+        heureDebut: `${date.format('YYYYMMDD')} ${selectedHeure.replace('h',':')}:00`,
+        heureFin: `${date.format('YYYYMMDD')} ${sumTime()}`,
+        utilisateur: 'user',
+        participants: [],
         nombrePersonne: 3,
-        porte: 'INSA'
+        porte: 'Eleve'
       };
     
       fetch('/addResa', {
@@ -69,7 +89,6 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
           console.error('Erreur lors de la réservation:', error);
         });
     };
-    
 
   return (
 
@@ -81,7 +100,7 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
           <ColorToggleButton onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
           <ColorToggleButton onChange={handleDureeChange} title='Durée' items={duree} />
           <div style={{textAlign: "right"}}>
-            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick}> Valider la réservation </Button>
+            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick} disabled={selectedHeure === null || selectedDuree === null}> Valider la réservation </Button>
           </div>
         </div>
       </Card> 
