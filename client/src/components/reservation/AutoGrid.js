@@ -83,12 +83,9 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
 
   //fonction qui crée la requête à partir du filtre en ayant rempli salle et date
   function queryBuilding(salle, date) {
-
     console.log('requête salle/date construite');
-
     const salleURI = encodeURIComponent(salle);
     return '/getRoomReservation?salle='+salleURI+'&date='+date;
-
   }
 
 
@@ -97,14 +94,6 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
     console.log('requête salle/date/heure construite');
     const salleURI = encodeURIComponent(salle);
     return '/getReservationHour?salle=' + salleURI + '&date=' + date + '&heure=' + heure;
-  }
-
-
-  //fonction qui crée requête apres remplissage salle date heure duree
-  function queryBuildingWithHourAndDuration(salle, date, heure, duree) {
-    console.log('requête salle/date/heure/duree construite');
-    const salleURI = encodeURIComponent(salle);
-    return '/getReservationHourTime?salle=' + salleURI + '&date=' + date + '&heure=' + heure + '&duree=' + duree;
   }
 
 
@@ -118,9 +107,15 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
 
     let apiUrls;
 
-    apiUrls = salles.map((salle) =>
-      queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
-    );
+    if(selectedHeure==='') {
+      apiUrls = salles.map((salle) =>
+        queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
+      );      
+    } else {
+      apiUrls = salles.map((salle) =>
+        queryBuildingWithHour(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure)
+      );        
+    }
 
     console.log(apiUrls);
 

@@ -22,15 +22,9 @@ export default function ReservationPage() {
           </div>
 
           <div>   
-            {times.length === 0 ? (
-              <div>
-                <br/><br/><br/><br/>
-                <p>Loading...</p>
-              </div>
-            ) : (
-              salles.map((salle, index) => (
+            {salles.map((salle, index) => (
               <Salle key={index} salle={salle} heures={times[index]}/>
-            )))}
+            ))}
           </div>
 
       </div>
