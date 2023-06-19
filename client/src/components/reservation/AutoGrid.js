@@ -83,7 +83,7 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
 
   //fonction qui crée la requête à partir du filtre en ayant rempli salle et date
   function queryBuilding(salle, date) {
-    console.log('requête salle/date construite');
+    // console.log('requête salle/date construite');
     const salleURI = encodeURIComponent(salle);
     return '/getRoomReservation?salle='+salleURI+'&date='+date;
   }
@@ -91,7 +91,7 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
 
   //fonction qui crée requête apres remplissage salle date et heure
   function queryBuildingWithHour(salle, date, heure) {
-    console.log('requête salle/date/heure construite');
+    // console.log('requête salle/date/heure construite');
     const salleURI = encodeURIComponent(salle);
     return '/getReservationHour?salle=' + salleURI + '&date=' + date + '&heure=' + heure;
   }
@@ -117,26 +117,18 @@ export default function AutoGrid({ setTimes, complet, laSalle }) {
       );        
     }
 
-    console.log(apiUrls);
+    // console.log(apiUrls);
 
     const fetchPromises = apiUrls.map((apiUrl) => fetch(apiUrl).then((response) => response.json()));
-  
+
     Promise.all(fetchPromises)
       .then((dataArray) => {
-        const times = dataArray
-          .map((data) => {
-            console.log(data);
-            data.map((item) => item.time)
-          })
-          .filter((time) => time.length > 0);
-          
-        console.log(times);
+        const times = dataArray.map((data) => data.map((item) => item.time));
+        // console.log(times);
         setTimes(times);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
       });
-
   } 
   
 

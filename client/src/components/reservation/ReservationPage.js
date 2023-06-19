@@ -10,7 +10,7 @@ export default function ReservationPage() {
 
     // Const
     const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
-    const [times, setTimes] = useState([]);
+    const [times, setTimes] = useState(null);
 
     // Functions
 
@@ -22,9 +22,15 @@ export default function ReservationPage() {
           </div>
 
           <div>   
-            {salles.map((salle, index) => (
-              <Salle key={index} salle={salle} heures={times[index]}/>
-            ))}
+          {times === null ? (
+              <div>
+                <br/><br/><br/><br/>
+                <p>Loading...</p>
+              </div>
+            ) : (
+              salles.map((salle, index) => (
+                <Salle key={index} salle={salle} heures={times[index]}/>
+            )))}
           </div>
 
       </div>

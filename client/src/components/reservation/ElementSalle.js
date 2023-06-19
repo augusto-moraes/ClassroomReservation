@@ -7,15 +7,15 @@ import ColorToggleButton from '../common/ToggleButtonGroup';
 export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : '}) {
 
     // Const
-    const hours = ['08:00', '08:30', '09:00', '09:30', 
-                    '10:00', '10:30', '11:00', '11:30', '12:00',
-                    '12:30', '13:00', '13:30', '14:00', '14:30', 
-                    '15:00', '15:30', '16:00', '16:30','17:00', 
-                    '17:30', '18:00', '18:30', '19:00'];
+    const hours = ['08h00', '08h30', '09h00', '09h30', 
+                    '10h00', '10h30', '11h00', '11h30', '12h00',
+                    '12h30', '13h00', '13h30', '14h00', '14h30', 
+                    '15h00', '15h30', '16h00', '16h30','17h00', 
+                    '17h30', '18h00', '18h30', '19h00'];
 
-    const disabledHours = heures;
-    const dureeTotale = [`30 min`, `01:00`, `01:30`, `02:00`, `02:30`, `03:00`, `03:30`, `04:00`];
+    const dureeTotale = [`30 min`, `01h00`, `01h30`, `02h00`, `02h30`, `03h00`, `03h30`, `04h00`];
 
+    const [disabledHours, setDisabledHours] = React.useState(heures);
     const [selectedHeure, setSelectedHeure] = React.useState('');
     const [selectedDuree, setSelectedDuree] = React.useState('');
 
@@ -76,8 +76,8 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
       <h1>Salle {salle}</h1>
         <div style={{textAlign: "left"}}>
           <p>{desc}</p>
-          <ColorToggleButton  key={'key1'} onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
-          <ColorToggleButton  key={'key2'} onChange={handleDureeChange} title='Durée' items={duree} />
+          <ColorToggleButton onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
+          <ColorToggleButton onChange={handleDureeChange} title='Durée' items={duree} />
           <div style={{textAlign: "right"}}>
             <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick}> Valider la réservation </Button>
           </div>

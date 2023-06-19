@@ -25,7 +25,7 @@ export default function ColorToggleButton({items=['rien'], title='titre', onChan
       size={'small'}
     >
         {items.map((item) => (
-          <ToggleButton value={item} disabled={disabledItems.indexOf(item) > -1}>{item}</ToggleButton>
+          <ToggleButton key={item} value={item} disabled={disabledItems.indexOf(item) > -1}>{item}</ToggleButton>
         ))}
     </ToggleButtonGroup>
     </div>
