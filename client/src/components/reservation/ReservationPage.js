@@ -1,59 +1,38 @@
 import * as React from 'react';
-import { useState } from 'react';
 import Salle from './ElementSalle';
-import FiltresRecherche from './FiltresRecherche';
+import moment from 'moment';
+import AutoGrid from './AutoGrid';
 
 
-export default function ReservationPage(salle, h, complet =1) {
+export default function ReservationPage() {
 
     // States
 
     // Const
     const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
-    const dureeResa = ['30min'];
-    const [times, setTimes] = useState([]);
+    const [times, setTimes] = React.useState(null);
+    const [selectedDate, setSelectedDate] = React.useState(moment());
 
     // Functions
 
-  if (complet === 1) {
     return (
       <div>
-        
-          <div>
-            <FiltresRecherche setTimes={setTimes} complet={1}/>
+          <div style={{margin: '50px'}}>
+            <AutoGrid setTimes={setTimes} setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
           </div>
 
           <div>   
-            {times.length === 0 ? (
+          {times === null ? (
               <div>
                 <br/><br/><br/><br/>
                 <p>Loading...</p>
               </div>
             ) : (
               salles.map((salle, index) => (
-              <Salle key={salle} salle={salle} heures={times[index]} duration={dureeResa}/>
+                <Salle key={index} salle={salle} heures={times[index]} date={selectedDate}/>
             )))}
           </div>
-
       </div>
     );
-  } else {
-    return (
-      <div>
-        
-          <div>
-            <FiltresRecherche setTimes={setTimes} complet={0}/>
-          </div>
-
-          <div>   
-            {salles.length > 0 && (
-              <Salle key={salles[0]} salle={salles[0]} heures={times[0]} duration={dureeResa}/>
-            )}
-          </div>
-
-      </div>
-
-    );  
-  }
 }
 

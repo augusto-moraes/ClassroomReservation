@@ -53,8 +53,11 @@ async function getReservationRoom(salle, date) {
             currentTime = nextTime;
         }
 
+        // Filtrer les créneaux disponibles avec available = "non"
+        const availableSlots = availabilityTable.filter(slot => slot.available === 'non');
+
         // Renvoyer le tableau de disponibilités
-        return availabilityTable;
+        return availableSlots;
     } finally {
         // Fermeture de la connexion à la base de données
         await client.close();
@@ -106,27 +109,25 @@ async function getReservationHour(salle, date, heure) {
 
           const isAvailable = isTimeSlotAvailable(currentTime, timeSlotEnd, availableTimeSlots);
 
-            if (isAvailable) {
-              const timeSlot = {
-                time: formatTime(currentTime),
-                available: 'oui'
-              };
-              availabilityTable.push(timeSlot);
+            if (!isAvailable) {
+                const timeSlot = {
+                    time: formatTime(currentTime),
+                    available: 'non'
+                };
+                availabilityTable.push(timeSlot);
             }
 
           currentTime = timeSlotEnd;
         }
 
-        // Filtrer les créneaux disponibles avec available = "oui"
-        const availableSlots = availabilityTable.filter(slot => slot.available === 'oui');
-
         // Renvoyer le tableau de disponibilités
-        return availableSlots;
+        return availabilityTable;
     } finally {
         // Fermeture de la connexion à la base de données
         await client.close();
     }
 }
+
 
 
 async function getReservationTime(salle, date, duree) {
@@ -401,9 +402,17 @@ async function getReservationUser(user) {
             const formattedDuration = minutes > 0 ? `${hours}h${minutes}m` : `${hours}h`;
             const formattedStartDate = moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').format('DD-MM-YYYY HH[h]mm');
 
+            const [date, time] = formattedStartDate.split(' ');
+            const [day, month, year] = date.split('-');
+            const [hour, minute] = time.split('h');
+
+            const formattedDate = `${day}-${month}-${year}`;
+            const formattedStartTime = parseInt(hour, 10).toString() + 'h' + minute;
+
             return {
                 Salle: reservation.Salle,
-                'heure début': formattedStartDate,
+                Date: formattedDate,
+                'heure début': formattedStartTime,
                 Durée: formattedDuration
             };
         });
@@ -414,6 +423,7 @@ async function getReservationUser(user) {
         await client.close();
     }
 }
+
 
 
 
@@ -447,6 +457,7 @@ function calculateAvailableTimeSlots(reservations, date) {
             // Convertir l'heure de début et de fin de la réservation en objets Date
             const reservationStart = moment(reservation['heure debut'], 'YYYYMMDD HH:mm:ss').toDate();
             const reservationEnd = moment(reservation['heure fin'], 'YYYYMMDD HH:mm:ss').toDate();
+
 
             // Vérifier s'il y a un espace disponible avant la première réservation
             if (i === 0 && reservationStart > startDateTime) {
@@ -497,12 +508,18 @@ function calculateAvailableTimeSlots(reservations, date) {
 // Vérifier si un créneau de temps donné est disponible
 function isTimeSlotAvailable(startTime, endTime, availableTimeSlots) {
     for (const slot of availableTimeSlots) {
-        if (slot.start <= startTime && slot.end >= endTime) {
+        const slotStartTime = moment(slot.start).toDate();
+        const slotEndTime = moment(slot.end).toDate();
+
+        if (startTime >= slotStartTime && endTime <= slotEndTime) {
             return true;
         }
     }
+
     return false;
 }
+
+
 
 
 
@@ -510,50 +527,5 @@ function isTimeSlotAvailable(startTime, endTime, availableTimeSlots) {
 function formatTime(time) {
     return moment(time).format('HH[h]mm');
 }
-
-// Appeler la fonction principale
-getReservationHour('TD C', '2023-06-08', '09:00').then((availabilityTable) => {
-    // Afficher le tableau de disponibilités
-    console.log(availabilityTable);
-    // ...
-}).catch(console.error);
-
-// getReservationTime('TD D', '2023-06-02', '01:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// getReservationTime('TD D', '2023-06-02', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// getReservationHourTime('TD D', '2023-06-02', '12:00', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// checkReservationHourTime('TD D', '2023-06-02', '08:00', '02:00').then((availabilityTable) => {
-//     // Afficher le tableau de disponibilités pour la durée spécifiée
-//     console.log(availabilityTable);
-//     // ...
-// }).catch(console.error);
-
-// Appeler la fonction principale
-// getReservationRoomSecond('TD D', '2023-06-02').then((reservationHours) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(reservationHours);
-//     // ...
-// }).catch(console.error);
-
-// Appeler la fonction principale
-// getReservationUser('toto').then((reservations) => {
-//     // Afficher le tableau de disponibilités
-//     console.log(reservations);
-//     // ...
-// }).catch(console.error);
 
 module.exports = { getReservationRoom, getReservationHour, getReservationHourTime, getReservationTime, checkReservationHourTime, getReservationRoomSecond, getReservationUser };

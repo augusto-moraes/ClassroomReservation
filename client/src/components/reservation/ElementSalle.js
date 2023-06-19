@@ -4,20 +4,20 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ColorToggleButton from '../common/ToggleButtonGroup';
 
-export default function Salle({salle = 'TDX', heures, duration, desc = salle + ' est une salle incroyable !'}) {
+export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : ', date}) {
 
     // Const
-    const hours = ['08:00', '08:30', '09:00', '09:30', 
-                    '10:00', '10:30', '11:00', '11:30', '12:00',
-                    '12:30', '13:00', '13:30', '14:00', '14:30', 
-                    '15:00', '15:30', '16:00', '16:30','17:00', 
-                    '17:30', '18:00', '18:30', '19:00'];
+    const hours = ['08h00', '08h30', '09h00', '09h30', 
+                    '10h00', '10h30', '11h00', '11h30', '12h00',
+                    '12h30', '13h00', '13h30', '14h00', '14h30', 
+                    '15h00', '15h30', '16h00', '16h30','17h00', 
+                    '17h30', '18h00', '18h30', '19h00'];
 
-    const disabledHours = heures;
-    const dureeTotale = [`30 min`, `01:00`, `01:30`, `02:00`, `02:30`, `03:00`, `03:30`, `04:00`];
+    const dureeTotale = [`30 min`, `01h00`, `01h30`, `02h00`, `02h30`, `03h00`, `03h30`, `04h00`];
 
-    const [selectedHeure, setSelectedHeure] = React.useState('');
-    const [selectedDuree, setSelectedDuree] = React.useState('');
+    const [disabledHours, setDisabledHours] = React.useState(heures);
+    const [selectedHeure, setSelectedHeure] = React.useState(null);
+    const [selectedDuree, setSelectedDuree] = React.useState(null);
 
     const [duree, setDuree] = React.useState(dureeTotale.slice(0, Math.min(hours.length, dureeTotale.length)));
 
@@ -38,16 +38,38 @@ export default function Salle({salle = 'TDX', heures, duration, desc = salle + '
       setSelectedDuree(value);
     };
 
+    const sumTime = () => {
+      var heure = parseInt(selectedHeure.substring(0,3));
+      var min = 0;
+
+      // traitement des minutes
+      var minDuree = selectedDuree === '30 min' || parseInt(selectedDuree.substring(3,5)) > 0;
+      var minHeure = parseInt(selectedHeure.substring(3,5)) > 0;
+
+      if(minDuree && minHeure) heure+=1;
+      else if(minDuree || minHeure) min=30;
+      
+      // traitement des heures
+      if(selectedDuree !== '30 min') {
+        heure += parseInt(selectedDuree.substring(0,3));
+      }
+
+      const heureStr = heure < 10 ? `0${heure}` : `${heure}`;
+      const minStr = min === 30 ? `${min}` : `0${min}`;
+
+      return `${heureStr}:${minStr}:00`;
+    };
+
     const handleClick = () => {
       const reservationData = {
         salle: salle,
-        cours: 'LALALA',
-        heureDebut: '20230529 16:00:00',
-        heureFin: '20230529 18:00:00',
-        utilisateur: 'toto',
-        participants: ['arthur', 'bastien'],
+        cours: null,
+        heureDebut: `${date.format('YYYYMMDD')} ${selectedHeure.replace('h',':')}:00`,
+        heureFin: `${date.format('YYYYMMDD')} ${sumTime()}`,
+        utilisateur: 'user',
+        participants: [],
         nombrePersonne: 3,
-        porte: 'INSA'
+        porte: 'Eleve'
       };
     
       fetch('/addResa', {
@@ -67,7 +89,6 @@ export default function Salle({salle = 'TDX', heures, duration, desc = salle + '
           console.error('Erreur lors de la réservation:', error);
         });
     };
-    
 
   return (
 
@@ -76,10 +97,10 @@ export default function Salle({salle = 'TDX', heures, duration, desc = salle + '
       <h1>Salle {salle}</h1>
         <div style={{textAlign: "left"}}>
           <p>{desc}</p>
-          <ColorToggleButton  onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
-          <ColorToggleButton  onChange={handleDureeChange} title='Durée' items={duree} />
+          <ColorToggleButton onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
+          <ColorToggleButton onChange={handleDureeChange} title='Durée' items={duree} />
           <div style={{textAlign: "right"}}>
-            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick}> Valider la réservation </Button>
+            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick} disabled={selectedHeure === null || selectedDuree === null}> Valider la réservation </Button>
           </div>
         </div>
       </Card> 
