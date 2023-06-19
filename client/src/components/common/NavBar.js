@@ -15,12 +15,12 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const pages = [
   {
-    page: "New Reservation",
+    page: "Nouvelle Réservation",
     href: "reservation"
   },
   {
-    page: "Schedule",
-    href: "schedule"
+    page: "Mes Réservations",
+    href: "myreservations"
   }
 ];
 const settings = ['Logout'];
