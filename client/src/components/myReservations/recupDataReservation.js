@@ -6,7 +6,6 @@ export default function RecupDataReservation() {
 
   // data comes from backend
   const [data, setData] = useState([]);
-  const [url , setUrl] = useState('');
  
 
   // fetches data from backend (port 3001) and saves it in session as "data", to be displayed in the button

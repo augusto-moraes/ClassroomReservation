@@ -4,33 +4,45 @@ import Salle from './ElementSalleReservation';
 import FiltresRecherche from '../reservation/FiltresRecherche';
 import RecupDataReservation, { MesSallesReserve, MeshorairesReserve } from './recupDataReservation';
 import { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
+
 
 
 
 export default function MyReservations() {
 
-  const sallesReserver = MesSallesReserve();
-  const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
+  const [isUsernameSet, setIsUsernameSet] = useState(false);
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
 
-    if (storedUsername) {
-      setUser(storedUsername);
-    } else {
-      const username = prompt('Veuillez saisir votre nom :');
-      setUser(username);
-      localStorage.setItem('username', username);
-    }
-  }, []);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setIsUsernameSet(true);
+  };
 
-  console.log('Nom saisi :', user);
-    
+  if (!isUsernameSet) {
+    return (
+      <div style={{ backgroundColor: '#F7F7F7', padding: '20px' }}>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Veuillez saisir votre nom d'utilisateur :
+            <input type="text" value={username} onChange={handleUsernameChange} />
+          </label>
+          <Button type="submit">Valider</Button>
+        </form>
+      </div>
+    );
+  }
+
+  //MesSallesReserve(username);
 
   return (
     <div style={{backgroundColor:'#F7F7F7'}}>
         
-        <Salle/>
+        <Salle user={username}/>
     </div>
 
   );

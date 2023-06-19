@@ -5,13 +5,13 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RecupDataReservation, { MesSallesReserve, MeshorairesReserve, MesDureeReserve, MesDateReserve } from './recupDataReservation';
 
-export default function Salle({salle = 'TDX', desc = salle + ' est reservé !'}) {
+export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', user}) {
 
     // States
-    const sallesReserver = MesSallesReserve();
-    const horairesReserver = MeshorairesReserve();
-    const dureeReserver = MesDureeReserve();
-    const dateReserve = MesDateReserve();
+    const sallesReserver = MesSallesReserve(user);
+    const horairesReserver = MeshorairesReserve(user);
+    const dureeReserver = MesDureeReserve(user);
+    const dateReserve = MesDateReserve(user);
     // Const
     const handleDelete = (index) => {
       //Salle 
