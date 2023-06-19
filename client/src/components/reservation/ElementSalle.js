@@ -19,8 +19,8 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
     const [disabledHours, setDisabledHours] = React.useState(heures);
     const [selectedHeure, setSelectedHeure] = React.useState(null);
     const [selectedDuree, setSelectedDuree] = React.useState(null);
-    const [user, setUser] = React.useState(null);
-
+    
+    const [user, setUser] = React.useState('');
     const [duree, setDuree] = React.useState(dureeTotale.slice(0, Math.min(hours.length, dureeTotale.length)));
 
     // Functions
@@ -89,11 +89,10 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
         .catch(error => {
           // Gérer les erreurs ici
           console.error('Erreur lors de la réservation:', error);
-        });
+        }).then(() => window.location.reload(false));
     };
 
   return (
-
     <div style={{display: "flex", alignItems: "center", justifyContent: "center"}} >
       <Card style= {{paddingLeft: 25, paddingBottom:25, padding:20, margin: "10px", borderRadius: "5px", backgroundColor: 'white', boxShadow: '2px 2px 0px #D7D7D7', whiteSpace: 'nowrap', overflowX: 'scroll'}}>
       <h1>Salle {salle}</h1>
@@ -101,9 +100,9 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
           <p>{desc}</p>
           <ColorToggleButton onChange={handleHeureChange} title='Heure' items={hours} disabledItems={disabledHours} />
           <ColorToggleButton onChange={handleDureeChange} title='Durée' items={duree} />
-          <BasicTextFields></BasicTextFields>
           <div style={{textAlign: "right"}}>
-            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick} disabled={selectedHeure === null || selectedDuree === null}> Valider la réservation </Button>
+            <BasicTextFields setUser={setUser} user={user} />
+            <Button variant="contained" size='small' endIcon={<SendIcon />} onClick={handleClick} disabled={selectedHeure === null || selectedDuree === null || user === ''}> Valider la réservation </Button>
           </div>
         </div>
       </Card> 

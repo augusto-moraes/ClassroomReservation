@@ -3,9 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 
-export default function BasicTextFields() {
-    const [user, setUser] = React.useState('');
-  
+export default function BasicTextFields({user, setUser}) {
     const handleChange = (e) => {
       setUser(e.target.value);
     };
@@ -25,6 +23,7 @@ export default function BasicTextFields() {
           variant="outlined"
           value={user}
           onChange={handleChange}
+          size='small'
         />
       </Box>
     );
