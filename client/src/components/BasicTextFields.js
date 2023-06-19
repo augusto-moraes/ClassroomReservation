@@ -12,14 +12,14 @@ export default function BasicTextFields({user, setUser}) {
       <Box
         component="form"
         sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
+          '& > :not(style)': { m: 1, width: '21ch' },
         }}
         noValidate
         autoComplete="off"
       >
         <TextField
           id="outlined-basic"
-          label="Prénom"
+          label="Username"
           variant="outlined"
           value={user}
           onChange={handleChange}
