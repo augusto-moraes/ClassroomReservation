@@ -127,7 +127,7 @@ app.post('/addResa', async (req, res) => {
 
     try {
         const add = await addResa(salle, cours, heureDebut, heureFin, utilisateur, participants, nombrePersonne, porte);
-        res.json(add);
+        res.status(201).json({ message: 'Réservation ajoutée avec succès.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Une erreur est survenue lors de l ajout de la réservation.' });
