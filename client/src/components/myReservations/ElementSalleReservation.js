@@ -74,6 +74,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', 
   return (
 
     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} >
+      <h1>Voici tes réservations {user}</h1>
       {horairesReserver.map((heure, index) => (
         <Card key={index} style= {{paddingLeft: 20, padding:20, width: 1100, margin: "10px", borderRadius: "5px", backgroundColor: 'white', boxShadow: '2px 2px 0px #D7D7D7'}}>
           <h1>{sallesReserver[index]} est réservée</h1>
