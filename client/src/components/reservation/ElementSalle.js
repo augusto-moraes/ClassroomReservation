@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ColorToggleButton from '../common/ToggleButtonGroup';
 
-export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : '}) {
+export default function Salle({salle = 'TDX', heures, desc = salle + ' est disponible aux horaires suivants : ', date}) {
 
     // Const
     const hours = ['08h00', '08h30', '09h00', '09h30', 
@@ -32,6 +32,8 @@ export default function Salle({salle = 'TDX', heures, desc = salle + ' est dispo
     const handleHeureChange = (value) => {
       setSelectedHeure(value);
       setDuree(dureeTotale.slice(0, calculDuree(value)));
+
+      console.log(date);
     };
 
     const handleDureeChange = (value) => {

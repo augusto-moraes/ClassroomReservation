@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
 import Salle from './ElementSalle';
-import FiltresRecherche from './FiltresRecherche';
+import moment from 'moment';
+import AutoGrid from './AutoGrid';
 
 
 export default function ReservationPage() {
@@ -10,15 +10,15 @@ export default function ReservationPage() {
 
     // Const
     const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
-    const [times, setTimes] = useState(null);
+    const [times, setTimes] = React.useState(null);
+    const [selectedDate, setSelectedDate] = React.useState(moment());
 
     // Functions
 
     return (
       <div>
-        
-          <div>
-            <FiltresRecherche setTimes={setTimes} />
+          <div style={{margin: '50px'}}>
+            <AutoGrid setTimes={setTimes} setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
           </div>
 
           <div>   
@@ -29,10 +29,9 @@ export default function ReservationPage() {
               </div>
             ) : (
               salles.map((salle, index) => (
-                <Salle key={index} salle={salle} heures={times[index]}/>
+                <Salle key={index} salle={salle} heures={times[index]} date={selectedDate}/>
             )))}
           </div>
-
       </div>
     );
 }
