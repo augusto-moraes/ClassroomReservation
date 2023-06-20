@@ -3,9 +3,6 @@ import Salle from './ElementSalleReservation';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
-
-
-
 export default function MyReservations() {
 
   const [username, setUsername] = useState('');
@@ -33,16 +30,11 @@ export default function MyReservations() {
       </div>
     );
   }
-
   
-
-  
-
-  //MesSallesReserve(username);
-
+  //MesSallesReserve(username)
   return (
     <div style={{backgroundColor:'#F7F7F7'}}>
-        <Salle user={username}/>
+      <Salle user={username}/>
     </div>
   );
   

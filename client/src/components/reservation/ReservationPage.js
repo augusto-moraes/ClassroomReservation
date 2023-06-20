@@ -3,7 +3,6 @@ import Salle from './ElementSalle';
 import moment from 'moment';
 import AutoGrid from './AutoGrid';
 
-
 export default function ReservationPage() {
 
     // States

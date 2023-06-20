@@ -2,26 +2,21 @@ import * as React from 'react';
 import { Card } from '@mui/material';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import RecupDataReservation, { MesSallesReserve, MeshorairesReserve, MesDureeReserve, MesDateReserve } from './recupDataReservation';
-import MyReservations from './myReservations';
+import { MesSallesReserve, MeshorairesReserve, MesDureeReserve, MesDateReserve } from './recupDataReservation';
 
 export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', user}) {
     
-    // States
     const sallesReserver = MesSallesReserve(user);
     const horairesReserver = MeshorairesReserve(user);
     const dureeReserver = MesDureeReserve(user);
     const dateReserve = MesDateReserve(user);
-    // Const
-    const handleDelete = (index) => {
-      //Salle 
 
+    const handleDelete = (index) => {
       const salleId =  sallesReserver[index]
 
       // fabriquer l'heure de fin 
       const heureDebut = parseInt(horairesReserver[index])
       const dureeResa = parseInt(dureeReserver[index]);
-      
       
       const heureFin = heureDebut + dureeResa;
       const heureFinS = heureFin.toString() + "h";
@@ -63,7 +58,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', 
         })
         .catch(error => {
           console.error(error);
-        });
+        }).then(() => window.location.reload(false));;
     }
 
     const [clock, setClock] = React.useState(0);
@@ -77,7 +72,6 @@ export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', 
     }, []);
 
   return (
-
     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} >
       <h1>Réservations de {user}</h1>
       {horairesReserver.length === 0 ? (

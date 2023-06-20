@@ -1,17 +1,10 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import { useState } from 'react';
-import { Username } from './myReservations';
 
 export default function RecupDataReservation() {
 
   // data comes from backend
-  const [data, setData] = useState([]);
-  
-  
-  
-  
- 
+  const [data, setData] = useState([]); 
 
   // fetches data from backend (port 3001) and saves it in session as "data", to be displayed in the button
   React.useEffect(() => {
@@ -20,28 +13,19 @@ export default function RecupDataReservation() {
       .then((text) => {setData(JSON.parse(text))
       })    
   }, []);
-  return (
-    <div>
-       
-       
-    
-  </div>    
-  );
+  return (<></>);
 }
 
 export function MesSallesReserve() {
   const [data, setData] = useState([]);
   const [salleNames, setSalleNames] = useState([]);
  
-
   // fetches data from backend (port 3001) and saves it in session as "data", to be displayed in the button
   React.useEffect(() => {
     fetch('/getReservationUser?user=toto')
       .then((res) => res.text())
       .then((text) => {setData(JSON.parse(text))
-      })
-    
-      
+      })  
   }, []);
 
   React.useEffect(() => {
@@ -55,16 +39,13 @@ export function MesSallesReserve() {
 export function MeshorairesReserve(user="toto") {
   const [data, setData] = useState([]);
   const [horaires, sethoraires] = useState([]);
- 
 
   // fetches data from backend (port 3001) and saves it in session as "data", to be displayed in the button
   React.useEffect(() => {
     fetch(`/getReservationUser?user=${user}`)
       .then((res) => res.text())
       .then((text) => {setData(JSON.parse(text))
-      })
-    
-      
+      })    
   }, []);
 
   React.useEffect(() => {
@@ -73,7 +54,6 @@ export function MeshorairesReserve(user="toto") {
   }, [data]);
 
   return horaires;
-  
 }
 
 export function MesDureeReserve(user='toto') {
@@ -86,9 +66,7 @@ export function MesDureeReserve(user='toto') {
     fetch(`/getReservationUser?user=${user}`)
       .then((res) => res.text())
       .then((text) => {setData(JSON.parse(text))
-      })
-    
-      
+      })   
   }, []);
 
   React.useEffect(() => {
@@ -97,22 +75,18 @@ export function MesDureeReserve(user='toto') {
   }, [data]);
 
   return duree;
-  
 }
 
 export function MesDateReserve(user='toto') {
   const [data, setData] = useState([]);
   const [dateR, setDateR] = useState([]);
  
-
   // fetches data from backend (port 3001) and saves it in session as "data", to be displayed in the button
   React.useEffect(() => {
     fetch(`/getReservationUser?user=${user}`)
       .then((res) => res.text())
       .then((text) => {setData(JSON.parse(text))
       })
-    
-      
   }, []);
 
   React.useEffect(() => {
@@ -120,8 +94,7 @@ export function MesDateReserve(user='toto') {
     setDateR(extractedDate);
   }, [data]);
 
-  return dateR;
-  
+  return dateR;  
 }
 
 
