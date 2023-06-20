@@ -3,9 +3,6 @@ import Salle from './ElementSalleReservation';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
-
-
-
 export default function MyReservations() {
 
   const [username, setUsername] = useState('');
