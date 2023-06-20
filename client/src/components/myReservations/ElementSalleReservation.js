@@ -98,7 +98,7 @@ export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', 
             
             <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
               <Button variant='outlined' startIcon={<DeleteIcon />} onClick={() => handleDelete(index)} >
-                Delete reservation
+                Supprimer ma réservation
               </Button>
             </div>
           </Card>

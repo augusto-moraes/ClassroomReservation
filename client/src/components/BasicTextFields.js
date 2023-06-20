@@ -19,7 +19,7 @@ export default function BasicTextFields({user, setUser}) {
       >
         <TextField
           id="outlined-basic"
-          label="Username"
+          label="Nom d'utilisateur"
           variant="outlined"
           value={user}
           onChange={handleChange}
