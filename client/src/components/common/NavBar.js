@@ -12,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { Link } from 'react-router-dom';
 
 const pages = [
   {
@@ -96,8 +97,8 @@ function NavBar() {
               }}
             >
               {pages.map(({page, href}) => (
-                <MenuItem key={page} href={href} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page} component={Link} to={href} onClick={handleCloseNavMenu}>
+                  {page}
                 </MenuItem>
               ))}
             </Menu>
@@ -124,7 +125,8 @@ function NavBar() {
             {pages.map(({page, href}) => (
               <Button
                 key={page}
-                href={href}
+                component={Link}
+                to={href}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
@@ -161,11 +163,10 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key={'logout'} onClick={handleCloseUserMenu}>Logout</MenuItem>
+              <MenuItem key={'MyReservations'} component={Link} to="/myReservations" onClick={handleCloseUserMenu}>
+                MyReservations
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
