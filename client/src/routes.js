@@ -8,6 +8,7 @@ import './routes.css';
 
 import NavBar from "./components/common/NavBar";
 import ReservationPage from "./components/reservation/ReservationPage";
+import Footer from "./components/common/Footer";
 import MyReservations from "./components/myReservations/myReservations";
 
 export default function Root() {
