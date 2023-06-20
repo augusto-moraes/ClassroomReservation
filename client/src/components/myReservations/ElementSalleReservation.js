@@ -64,34 +64,45 @@ export default function Salle({salle = 'TDX', desc = salle + ' est reservé !', 
         .catch(error => {
           console.error(error);
         });
-      
     }
-    // Functions
 
-    
+    const [clock, setClock] = React.useState(0);
+    React.useEffect(() => {
+      const timer = window.setInterval(() => {
+        setClock(prevTime => prevTime + 1); // <-- Change this line!
+      }, 1000);
+      return () => {
+        window.clearInterval(timer);
+      };
+    }, []);
 
   return (
 
     <div style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}} >
-      <h1>Voici tes réservations {user}</h1>
-      {horairesReserver.map((heure, index) => (
-        <Card key={index} style= {{paddingLeft: 20, padding:20, width: 1100, margin: "10px", borderRadius: "5px", backgroundColor: 'white', boxShadow: '2px 2px 0px #D7D7D7'}}>
-          <h1>{sallesReserver[index]} est réservée</h1>
-          <p>Date : {dateReserve[index]} </p>
-          <p>Heure : {horairesReserver[index]}</p>
-          <p>Durée : {dureeReserver[index]}</p>
-          
-          <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
-            <Button variant='outlined' startIcon={<DeleteIcon />} onClick={() => handleDelete(index)} >
-              Delete reservation
-            </Button>
-          </div>
-        </Card>
-        
-      ))}
+      <h1>Réservations de {user}</h1>
+      {horairesReserver.length === 0 ? (
+        <div>
+          <br/><br/><br/><br/>
+          {clock < 4 ? 
+            (<p>Loading...</p>) : 
+            (<p>Nous n'avons pas trouvé de reservation pour l'utilisateur {user}</p>)
+          }
+        </div>
+      ) : (
+        horairesReserver.map((heure, index) => (
+          <Card key={index} style= {{paddingLeft: 20, padding:20, width: 1100, margin: "10px", borderRadius: "5px", backgroundColor: 'white', boxShadow: '2px 2px 0px #D7D7D7'}}>
+            <h1>{sallesReserver[index]} est réservée</h1>
+            <p>Date : {dateReserve[index]} </p>
+            <p>Heure : {horairesReserver[index]}</p>
+            <p>Durée : {dureeReserver[index]}</p>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
+              <Button variant='outlined' startIcon={<DeleteIcon />} onClick={() => handleDelete(index)} >
+                Delete reservation
+              </Button>
+            </div>
+          </Card>
+      )))}
     </div>
-
-
-
   );
 }

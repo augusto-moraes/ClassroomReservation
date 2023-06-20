@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Salle from './ElementSalleReservation';
-import FiltresRecherche from '../reservation/FiltresRecherche';
-import RecupDataReservation, { MesSallesReserve, MeshorairesReserve } from './recupDataReservation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 
 
@@ -36,20 +34,11 @@ export default function MyReservations() {
     );
   }
 
-  
-
-  
-
-  //MesSallesReserve(username);
-
   return (
     <div style={{backgroundColor:'#F7F7F7'}}>
         <Salle user={username}/>
-  
     </div>
   );
-  
-  
 }
 
 
