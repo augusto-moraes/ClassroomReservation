@@ -13,8 +13,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
-import moment from 'moment';
-
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,23 +22,17 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function AutoGrid({ setTimes, complet }) {
+export default function AutoGrid({ setTimes, setSelectedDate, selectedDate, complet, laSalle }) {
   const salles = ['TD A', 'TD B', 'TD C', 'TD D', 'TD E', 'TD F', 'TP A', 'TP B', 'TP C', 'TP D', 'TP E', 'Projet A', 'Projet B'];
   const heures = ['8h', '8h30', '9h', '9h30', '10h', '10h30', '11h', '11h30', '12h', '12h30', '13h', '13h30', '14h', '14h30', '15h', '15h30', '16h', '16h30', '17h', '17h30', '18h', '18h30', '19h', '19h30', '20h', '20h30', '21h', '21h30', '22h', '22h30'];
   const durees = ['30min', '1h', '1h30', '2h'];
 
-  const [selectedSalle, setSelectedSalle] = React.useState('');
+  const [selectedSalle, setSelectedSalle] = React.useState(laSalle);;
   const [selectedHeure, setSelectedHeure] = React.useState('');
   const [selectedDuree, setSelectedDuree] = React.useState('');
-  const [selectedDate, setSelectedDate] = React.useState(moment());
 
   //pour le pop-up d'erreur qunad la date n'est pas selected
   const [showErrorDialog, setShowErrorDialog] = React.useState(false);
-
-  React.useEffect(() => {
-    handleValidation();
-  });
-
   const openErrorDialog = () => {
     setShowErrorDialog(true);
   };
@@ -48,6 +40,12 @@ export default function AutoGrid({ setTimes, complet }) {
   const closeErrorDialog = () => {
     setShowErrorDialog(false);
   };  
+
+  //pour avoir l'affichage des salles du jour par défaut
+  React.useEffect(() => {
+    handleValidation();
+  }, []);
+
 
   //pour le reset des filtres 
   const [filterKey, setFilterKey] = React.useState(0);
@@ -81,28 +79,17 @@ export default function AutoGrid({ setTimes, complet }) {
 
   //fonction qui crée la requête à partir du filtre en ayant rempli salle et date
   function queryBuilding(salle, date) {
-
-    console.log('requête salle/date construite');
-
+    // console.log('requête salle/date construite');
     const salleURI = encodeURIComponent(salle);
     return '/getRoomReservation?salle='+salleURI+'&date='+date;
-
   }
 
 
   //fonction qui crée requête apres remplissage salle date et heure
   function queryBuildingWithHour(salle, date, heure) {
-    console.log('requête salle/date/heure construite');
+    // console.log('requête salle/date/heure construite');
     const salleURI = encodeURIComponent(salle);
     return '/getReservationHour?salle=' + salleURI + '&date=' + date + '&heure=' + heure;
-  }
-
-
-  //fonction qui crée requête apres remplissage salle date heure duree
-  function queryBuildingWithHourAndDuration(salle, date, heure, duree) {
-    console.log('requête salle/date/heure/duree construite');
-    const salleURI = encodeURIComponent(salle);
-    return '/getReservationHourTime?salle=' + salleURI + '&date=' + date + '&heure=' + heure + '&duree=' + duree;
   }
 
 
@@ -116,60 +103,29 @@ export default function AutoGrid({ setTimes, complet }) {
 
     let apiUrls;
 
-    if (selectedSalle==='') {
-
-      complet = 1;
-
-      if (selectedDuree==='' && selectedHeure !=='') {
-        apiUrls = salles.map((salle) =>
-          queryBuildingWithHour(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure)
-        );
-      } else if (selectedDuree==='' && selectedHeure==='') {
-        apiUrls = salles.map((salle) =>
-          queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
-        );
-      } else {
-        apiUrls = salles.map((salle) =>
-          queryBuildingWithHourAndDuration(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure, selectedDuree)
-        );    
-      }
-
-      console.log(apiUrls);
-  
-      const fetchPromises = apiUrls.map((apiUrl) => fetch(apiUrl).then((response) => response.json()));
-    
-      Promise.all(fetchPromises)
-        .then((dataArray) => {
-          const times = dataArray
-            .map((data) => data.map((item) => item.time))
-            .filter((time) => time.length > 0);
-          console.log(times);
-          setTimes(times);
-        })
-        .catch((error) => {
-          console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
-        });
-
-    } else {//si on a mis une salle en filtre
-
-      complet = 0;
-
-      apiUrls = queryBuilding(selectedSalle, selectedDate && selectedDate.format("YYYY-MM-DD"))
-
-      console.log(apiUrls);
-  
-      fetch(apiUrls)
-        .then(response => response.json())
-        .then(data => {
-          const times = data.map(item => item.time);
-          console.log(times);
-        })
-        .catch((error) => {
-          console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
-        });
+    if(selectedHeure==='') {
+      apiUrls = salles.map((salle) =>
+        queryBuilding(salle, selectedDate && selectedDate.format("YYYY-MM-DD"))
+      );      
+    } else {
+      apiUrls = salles.map((salle) =>
+        queryBuildingWithHour(salle, selectedDate && selectedDate.format("YYYY-MM-DD"), selectedHeure)
+      );        
     }
 
-  };
+    // console.log(apiUrls);
+
+    const fetchPromises = apiUrls.map((apiUrl) => fetch(apiUrl).then((response) => response.json()));
+
+    Promise.all(fetchPromises)
+      .then((dataArray) => {
+        const times = dataArray.map((data) => data.map((item) => item.time));
+        // console.log(times);
+        setTimes(times);
+      }).catch((error) => {
+        console.error('Une erreur est survenue lors de la récupération des données de réservation de salle', error);
+      });
+  } 
   
 
   return (
@@ -210,7 +166,6 @@ export default function AutoGrid({ setTimes, complet }) {
           <Button onClick={closeErrorDialog}>OK</Button>
         </DialogActions>
       </Dialog>
-
     </Box>
     </div>
   );
